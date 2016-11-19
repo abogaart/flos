@@ -1,0 +1,17 @@
+sudo: false
+language: node_js
+node_js:
+  - "7"
+  - "6"
+  - "5"
+  - "4"
+  - "0.12"
+matrix:
+  include:
+    - node_js: "lts/*"
+      env: LINT=true
+script:
+  - 'if [ -n "${LINT-}" ]; then npm run lint ; fi'
+  - 'if [ -z "${LINT-}" ]; then npm run test-ci ; fi'
+after_success:
+  - npm run coverage
