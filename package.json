@@ -55,11 +55,7 @@
       "src/**/*.js"
     ],
     "sourceMap": false,
-    "instrument": false,
-    "reporter": [
-      "lcov",
-      "text-summary"
-    ]
+    "instrument": false
   },
   "ava": {
     "files": [
