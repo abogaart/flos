@@ -13,7 +13,7 @@ class FlosReporter {
     if (linter.isPrintEarly()) {
       console.log(this.formatter.formatErrors(linter));
     } else {
-        // add compact mode
+        // TODO: add compact mode
       linter.errors.forEach((error) => {
         this.errors.push(this.formatter.formatError(error));
       });
@@ -24,7 +24,7 @@ class FlosReporter {
     if (linter.isPrintEarly()) {
       console.log(this.formatter.formatWarnings(linter));
     } else {
-      // add compact mode
+      // TODO: add compact mode
       linter.warnings.forEach((warning) => {
         this.warnings.push(this.formatter.formatWarning(warning));
       });

@@ -18,7 +18,6 @@ class FlosRunner {
 
         if (errors.find((linter) => linter.isFailOnError() && linter.isFailEarly()) ||
              warns.find((linter) => linter.isFailOnError() && linter.isFailEarly())) {
-          // print all errors and warning out now and exit before webpack compilation starts
           handler.exit(errors, warns);
         } else {
           handler.finish(errors, warns);
