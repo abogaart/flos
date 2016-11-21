@@ -3,7 +3,7 @@ class FlosLinter {
 
   constructor(name, options = {}) {
     this.name = name;
-    this.options = options;
+    this.options = Object.assign({}, options);
     this.errors = [];
     this.warnings = [];
   }
@@ -13,7 +13,6 @@ class FlosLinter {
   }
 
   lint() {
-    console.log(`Linter ${this.name} is linting with opts=`, this.options);
     return Promise.resolve(this);
   }
 
@@ -29,21 +28,22 @@ class FlosLinter {
     return this.options.failEarly;
   }
 
-  hasError() {
-    return this.errors.length > 0;
-  }
-
   isFailOnError() {
     return this.options.failOnError;
-  }
-
-  hasWarning() {
-    return this.warnings.length > 0;
   }
 
   isFailOnWarning() {
     return this.options.failOnWarning;
   }
+
+  hasErrors() {
+    return this.errors.length > 0;
+  }
+
+  hasWarnings() {
+    return this.warnings.length > 0;
+  }
+
 }
 
 module.exports = FlosLinter;
