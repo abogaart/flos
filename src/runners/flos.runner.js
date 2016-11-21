@@ -1,5 +1,7 @@
+import FlosHandler from '../handlers/flos.handler';
+
 class FlosRunner {
-  constructor(linters = []) {
+  constructor(...linters) {
     this.linters = linters;
   }
 
@@ -7,12 +9,9 @@ class FlosRunner {
     this.linters.forEach((linter) => linter.configure(opts));
   }
 
-  run (handler) {
-    console.log('Running flos!', this);
-    Promise.all(this.linters.map((linter) => linter.lint()))
+  run (handler = new FlosHandler()) {
+    return Promise.all(this.linters.map((linter) => linter.lint()))
       .then(() => {
-        console.log('Linting finished, generating report');
-
         const errors = this.linters.filter((linter) => linter.hasErrors());
         const warns = this.linters.filter((linter) => linter.hasWarnings());
 
