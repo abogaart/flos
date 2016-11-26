@@ -1,13 +1,13 @@
 import chalk from 'chalk';
 
-class CruiseFormatter {
+class FlosFormatter {
 
   formatErrors(linter) {
     const subject = 'Errors from ' + linter.getName();
     const errs = linter.errors.reduce((prev, error) => {
-      return prev + this.formatError(error);
+      return prev + '\n' + this.formatError(error);
     }, '');
-    return subject + '\n' + errs;
+    return subject + errs;
   }
 
   formatError(error) {
@@ -17,9 +17,9 @@ class CruiseFormatter {
   formatWarnings(linter) {
     const subject = 'Warnings from ' + linter.getName();
     const warnings = linter.warnings.reduce((prev, warn) => {
-      return prev + this.formatWarning(warn);
+      return prev + '\n' + this.formatWarning(warn);
     }, '');
-    return subject + '\n' + warnings;
+    return subject + warnings;
   }
 
   formatWarning(warning) {
@@ -35,6 +35,10 @@ class CruiseFormatter {
 
     if (fatalWarnings.length) {
       fatals.push(this.formatFatal(fatalWarnings, 'warning', 'warnings', chalk.yellow));
+    }
+
+    if (fatals.length === 0) {
+      return 'Linting failed';
     }
 
     let msg = chalk.red('Linting failed:') + chalk.white(' found ');
@@ -66,6 +70,10 @@ class CruiseFormatter {
       color
     };
   }
+
+  formatException(e) {
+    return chalk.red(e.stack ? e.stack : e);
+  }
 }
 
-module.exports = CruiseFormatter;
+module.exports = FlosFormatter;

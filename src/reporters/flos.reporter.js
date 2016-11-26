@@ -1,5 +1,3 @@
-import chalk from 'chalk';
-
 import FlosFormatter from '../formatters/flos.formatter';
 
 class FlosReporter {
@@ -11,7 +9,7 @@ class FlosReporter {
 
   error(linter) {
     if (linter.isPrintEarly()) {
-      console.log(this.formatter.formatErrors(linter));
+      this.print(this.formatter.formatErrors(linter));
     } else {
         // TODO: add compact mode
       linter.errors.forEach((error) => {
@@ -22,7 +20,7 @@ class FlosReporter {
 
   warning(linter) {
     if (linter.isPrintEarly()) {
-      console.log(this.formatter.formatWarnings(linter));
+      this.print(this.formatter.formatWarnings(linter));
     } else {
       // TODO: add compact mode
       linter.warnings.forEach((warning) => {
@@ -31,12 +29,16 @@ class FlosReporter {
     }
   }
 
-  throwFatalError(errors, warnings) {
+  fatal(errors, warnings) {
     throw new Error(this.formatter.formatFatals(errors, warnings));
   }
 
-  printError(error) {
-    console.log(chalk.red(error.stack ? error.stack : error));
+  exception(error) {
+    this.print(this.formatter.formatException(error));
+  }
+
+  print(...str) {
+    console.log(...str);
   }
 }
 

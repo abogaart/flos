@@ -14,11 +14,11 @@ class FlosHandler {
   exit(errors, warnings) {
     errors.forEach((linter) => this.reporter.error(linter));
     warnings.forEach((linter) => this.reporter.warning(linter));
-    this.reporter.throwFatalError(errors, warnings);
+    this.reporter.fatal(errors, warnings);
   }
 
   error(e) {
-    this.reporter.printError(e);
+    this.reporter.exception(e);
   }
 }
 

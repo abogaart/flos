@@ -21,19 +21,19 @@ class FlosLinter {
   }
 
   isPrintEarly() {
-    return this.options.printEarly;
+    return !!this.options.printEarly;
   }
 
   isFailEarly() {
-    return this.options.failEarly;
+    return !!this.options.failEarly;
   }
 
   isFailOnError() {
-    return this.options.failOnError;
+    return !!this.options.failOnError;
   }
 
   isFailOnWarning() {
-    return this.options.failOnWarning;
+    return !!this.options.failOnWarning;
   }
 
   hasErrors() {

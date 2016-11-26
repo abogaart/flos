@@ -18,6 +18,14 @@ test('Linter options are not overriden by global options', (t) => {
   t.deepEqual(linter.options, { a: 'a'});
 });
 
+test('Linter has default options', (t) => {
+  const linter = new FlosLinter('test-name');
+  t.false(linter.isPrintEarly());
+  t.false(linter.isFailEarly());
+  t.false(linter.isFailOnError());
+  t.false(linter.isFailOnWarning());
+});
+
 test('Linter options are set and immutable', (t) => {
   const opts = {
     failEarly: true,
