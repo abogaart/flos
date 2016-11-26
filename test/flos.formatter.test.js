@@ -1,5 +1,4 @@
 import test from 'ava';
-import sinon from 'sinon';
 import FlosLinter from '../lib/linters/flos.linter';
 import FlosFormatter from '../lib/formatters/flos.formatter';
 
@@ -66,7 +65,8 @@ test('Formats fatals', (t) => {
   t.is(fatalMsg, 'Linting failed: found 3 errors in linters e1 and e2, and 3 warnings in linters w1 and w2');
 
   fatalMsg = formatter.formatFatals([err1, err2, err3], [warn1, warn2, warn3]);
-  t.is(fatalMsg, 'Linting failed: found 4 errors in linters e1, e2 and e3, and 4 warnings in linters w1, w2 and w3');
+  t.is(fatalMsg, 'Linting failed: found 4 errors in linters e1, e2 and e3, ' +
+    'and 4 warnings in linters w1, w2 and w3');
 });
 
 test('Formats exception', (t) => {
