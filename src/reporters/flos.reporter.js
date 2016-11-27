@@ -11,10 +11,7 @@ class FlosReporter {
     if (linter.isPrintEarly()) {
       this.print(this.formatter.formatErrors(linter));
     } else {
-        // TODO: add compact mode
-      linter.errors.forEach((error) => {
-        this.errors.push(this.formatter.formatError(error));
-      });
+      this.errors.push(...linter.errors);
     }
   }
 
@@ -22,10 +19,7 @@ class FlosReporter {
     if (linter.isPrintEarly()) {
       this.print(this.formatter.formatWarnings(linter));
     } else {
-      // TODO: add compact mode
-      linter.warnings.forEach((warning) => {
-        this.warnings.push(this.formatter.formatWarning(warning));
-      });
+      this.warnings.push(...linter.warnings);
     }
   }
 
@@ -39,6 +33,11 @@ class FlosReporter {
 
   print(...str) {
     console.log(...str);
+  }
+
+  finish() {
+    this.errors.forEach((error) => this.print(this.formatter.formatError(error)));
+    this.warnings.forEach((warning) => this.print(this.formatter.formatWarning(warning)));
   }
 }
 

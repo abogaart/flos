@@ -11,11 +11,13 @@ let handler;
 let reporter;
 
 test.beforeEach(() => {
-  reporter = {};
-  reporter.error = sinon.spy();
-  reporter.warning = sinon.spy();
-  reporter.fatal = sinon.spy();
-  reporter.exception = sinon.spy();
+  reporter = {
+    error: sinon.spy(),
+    warning: sinon.spy(),
+    fatal: sinon.spy(),
+    exception: sinon.spy(),
+    finish: sinon.spy(),
+  };
   handler = new FlosHandler(reporter);
 });
 

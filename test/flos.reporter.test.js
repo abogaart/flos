@@ -31,23 +31,28 @@ test('Prints errors and warnings early', (t) => {
   t.is(formatter.formatWarnings.callCount, 1);
 });
 
-test('Stores errors and warnings if not early', (t) => {
+test('Stores errors and warnings if not early, and prints them on finish', (t) => {
   const linter = new FlosLinter('a');
   linter.errors = [ 'a', 'b' ];
   linter.warnings = [ 'c' ];
   reporter.error(linter);
   reporter.warning(linter);
   t.is(reporter.errors.length, 2);
-  t.is(formatter.formatError.callCount, 2);
+  t.is(formatter.formatError.callCount, 0);
   t.is(reporter.warnings.length, 1);
-  t.is(formatter.formatWarning.callCount, 1);
+  t.is(formatter.formatWarning.callCount, 0);
 
   linter.errors = [ 'c' ];
   reporter.error(linter);
   t.is(reporter.errors.length, 3);
-  t.is(formatter.formatError.callCount, 3);
+  t.is(formatter.formatError.callCount, 0);
 
   t.is(reporter.print.callCount, 0);
+
+  reporter.finish();
+  t.is(reporter.print.callCount, 4);
+  t.is(formatter.formatError.callCount, 3);
+  t.is(formatter.formatWarning.callCount, 1);
 });
 
 test('Throws on fatal', (t) => {

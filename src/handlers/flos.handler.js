@@ -9,6 +9,7 @@ class FlosHandler {
   finish(errors, warnings) {
     errors.forEach((linter) => this.reporter.error(linter));
     warnings.forEach((linter) => this.reporter.warning(linter));
+    this.reporter.finish();
   }
 
   exit(errors, warnings) {
