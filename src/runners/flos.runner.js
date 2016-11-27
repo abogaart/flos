@@ -1,10 +1,12 @@
+import FlosHandler from '../handlers/flos.handler';
+
 class FlosRunner {
 
   constructor(...linters) {
     if (linters.length === 1 && linters[0] instanceof Array) {
       this.linters = linters[0];
     } else {
-    this.linters = linters;
+      this.linters = linters;
     }
   }
 
@@ -12,7 +14,7 @@ class FlosRunner {
     this.linters.forEach((linter) => linter.configure(opts));
   }
 
-  run (handler) {
+  run (handler = new FlosHandler()) {
     const promises = this.linters.map((linter) => {
       try {
         return Promise.resolve(linter.lint());
