@@ -36,12 +36,17 @@ class WarningLinter extends FlosLinter {
   }
 }
 
+function mockHandler() {
+  return {
+    finish: sinon.spy(),
+    exit: sinon.spy(),
+    error: sinon.spy(),
+  };
+}
+
 function run(...linters) {
   const runner = new FlosRunner(...linters);
-  const handler = {};
-  handler.finish = sinon.spy();
-  handler.exit = sinon.spy();
-  handler.error = sinon.spy();
+  const handler = mockHandler();
   return runner.run(handler).then(() => handler);
 }
 
@@ -135,5 +140,25 @@ test('Errors on rejection', (t) => {
     t.true(handler.error.calledOnce);
     t.true(handler.error.calledWith(error));
   });
+});
+
+test('Returns error when caught', (t) => {
+  const linterA = new FlosLinter('a');
+  const error = new Error('error a');
+  linterA.lint = () => Promise.reject(error);
+  const runner = new FlosRunner(linterA);
+
+  const handler = mockHandler();
+  return runner.run(handler).then((err) => {
+    t.is(err, error);
+  });
+});
+
+test('Returns falsy when OK', (t) => {
+  const linterA = new FlosLinter('a');
+  const runner = new FlosRunner(linterA);
+
+  const handler = mockHandler();
+  return runner.run(handler).then((err) => t.falsy(err));
 });
 

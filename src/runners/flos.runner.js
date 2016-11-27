@@ -34,7 +34,10 @@ class FlosRunner {
         handler.finish(errors, warns);
       }
     })
-    .catch((error) => handler.error(error));
+    .catch((error) => {
+      handler.error(error);
+      return error;
+    });
   }
 }
 
