@@ -1,6 +1,11 @@
 class FlosRunner {
+
   constructor(...linters) {
+    if (linters.length === 1 && linters[0] instanceof Array) {
+      this.linters = linters[0];
+    } else {
     this.linters = linters;
+    }
   }
 
   configure(opts) {

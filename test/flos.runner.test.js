@@ -45,6 +45,25 @@ function run(...linters) {
   return runner.run(handler).then(() => handler);
 }
 
+test('Can be instantiated with linters as arguments', (t) => {
+  const linterA = new FlosLinter('a');
+  const linterB = new FlosLinter('b');
+  const runner = new FlosRunner(linterA, linterB);
+  t.is(runner.linters.length, 2);
+  t.is(runner.linters[0], linterA);
+  t.is(runner.linters[1], linterB);
+});
+
+test('Can be instantiated with an array of linters as the single argument', (t) => {
+  const linterA = new FlosLinter('a');
+  const linterB = new FlosLinter('b');
+  const linters = [linterA, linterB];
+  const runner = new FlosRunner(linters);
+  t.is(runner.linters.length, 2);
+  t.is(runner.linters[0], linterA);
+  t.is(runner.linters[1], linterB);
+});
+
 test('Runner should configure linters with global options', (t) => {
   const linter = new FlosLinter('a');
   linter.configure = sinon.spy();
