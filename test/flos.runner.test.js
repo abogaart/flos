@@ -64,7 +64,7 @@ test('Can be instantiated with an array of linters as the single argument', (t) 
   t.is(runner.linters[1], linterB);
 });
 
-test('Runner should configure linters with global options', (t) => {
+test('Can configure linters with global options', (t) => {
   const linter = new FlosLinter('a');
   linter.configure = sinon.spy();
   const runner = new FlosRunner(linter);
@@ -74,7 +74,7 @@ test('Runner should configure linters with global options', (t) => {
   t.true(linter.configure.calledWith(globalOpts));
 });
 
-test('Runner runs linters and finishes without errors or warnings', (t) => {
+test('Finishes without errors or warnings', (t) => {
   const linterA = new FlosLinter('a');
   const linterB = new FlosLinter('b');
   linterA.lint = sinon.spy();
@@ -87,7 +87,7 @@ test('Runner runs linters and finishes without errors or warnings', (t) => {
   });
 });
 
-test('Runner finishes with errors and warnings', (t) => {
+test('Finishes with errors and warnings', (t) => {
   const linterA = new ErrorLinter('a');
   const linterB = new TestLinter('b', { resolve: true });
   const linterC = new WarningLinter('c');
@@ -97,7 +97,7 @@ test('Runner finishes with errors and warnings', (t) => {
   });
 });
 
-test('Runner exits on fatal errors and failEarly', (t) => {
+test('Exits on fatal errors and failEarly', (t) => {
   const linterA = new ErrorLinter('a', { failEarly: true, failOnError: true });
   const linterB = new TestLinter('b', { resolve: true });
   return run(linterA, linterB).then((handler) => {
@@ -106,7 +106,7 @@ test('Runner exits on fatal errors and failEarly', (t) => {
   });
 });
 
-test('Runner exits on fatal warnings and failEarly', (t) => {
+test('Exits on fatal warnings and failEarly', (t) => {
   const linterA = new WarningLinter('a', { failEarly: true, failOnWarning: true });
   const linterB = new TestLinter('b', { resolve: true });
   return run(linterA, linterB).then((handler) => {
@@ -115,7 +115,7 @@ test('Runner exits on fatal warnings and failEarly', (t) => {
   });
 });
 
-test('Runner errors on exception', (t) => {
+test('Errors on exception', (t) => {
   const linterA = new FlosLinter('a');
   const error = new Error('error a');
   linterA.lint = () => {
@@ -127,7 +127,7 @@ test('Runner errors on exception', (t) => {
   });
 });
 
-test('Runner errors on rejection', (t) => {
+test('Errors on rejection', (t) => {
   const linterA = new FlosLinter('a');
   const error = new Error('error a');
   linterA.lint = () => Promise.reject(error);

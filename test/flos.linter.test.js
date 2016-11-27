@@ -1,24 +1,24 @@
 import test from 'ava';
 import FlosLinter from '../lib/linters/flos.linter';
 
-test('Linter has a name', (t) => {
+test('Has a name', (t) => {
   const linter = new FlosLinter('test-name');
   t.is(linter.getName(), 'test-name');
 });
 
-test('Linter options can be extended by global options', (t) => {
+test('Options can be extended by global options', (t) => {
   const linter = new FlosLinter('test-name', { a: 'a' });
   linter.configure({ b: 'b' });
   t.deepEqual(linter.options, { a: 'a', b: 'b' });
 });
 
-test('Linter options are not overriden by global options', (t) => {
+test('Options are not overriden by global options', (t) => {
   const linter = new FlosLinter('test-name', { a: 'a' });
   linter.configure({ a: 'b' });
   t.deepEqual(linter.options, { a: 'a'});
 });
 
-test('Linter has default options', (t) => {
+test('Has default options', (t) => {
   const linter = new FlosLinter('test-name');
   t.false(linter.isPrintEarly());
   t.false(linter.isFailEarly());
@@ -26,7 +26,7 @@ test('Linter has default options', (t) => {
   t.false(linter.isFailOnWarning());
 });
 
-test('Linter options are set and immutable', (t) => {
+test('Options are set and immutable', (t) => {
   const opts = {
     failEarly: true,
     printEarly: true,
@@ -43,7 +43,7 @@ test('Linter options are set and immutable', (t) => {
   t.true(linter.isPrintEarly());
 });
 
-test('Linter has errors and warnings', (t) => {
+test('Has errors and warnings', (t) => {
   const linter = new FlosLinter('test-name');
   t.false(linter.hasErrors());
   t.false(linter.hasWarnings());
@@ -54,7 +54,7 @@ test('Linter has errors and warnings', (t) => {
   t.true(linter.hasWarnings());
 });
 
-test('Linter should resolve a promise with a reference to itself on a succesful lint operation', (t) => {
+test('Should resolve a promise with a reference to itself on a succesful lint operation', (t) => {
   const linter = new FlosLinter('test-name');
   return linter.lint().then((result) => t.is(result, linter));
 });
