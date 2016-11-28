@@ -23,17 +23,7 @@ class FlosRunner {
       }
     });
     return Promise.all(promises)
-    .then(() => {
-      const errors = this.linters.filter((linter) => linter.hasErrors());
-      const warns = this.linters.filter((linter) => linter.hasWarnings());
-
-      if (errors.find((linter) => linter.isFailOnError() && linter.isFailEarly()) ||
-            warns.find((linter) => linter.isFailOnWarning() && linter.isFailEarly())) {
-        handler.exit(errors, warns);
-      } else {
-        handler.finish(errors, warns);
-      }
-    })
+    .then((linters) => handler.ok(linters))
     .catch((error) => {
       handler.error(error);
       return error;

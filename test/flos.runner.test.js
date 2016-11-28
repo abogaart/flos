@@ -3,25 +3,6 @@ import sinon from 'sinon';
 import FlosLinter from '../lib/linters/flos.linter';
 import FlosRunner from '../lib/runners/flos.runner';
 
-class TestLinter extends FlosLinter {
-  lint() {
-    const promise = new Promise((resolve, reject) => {
-      if (this.options.resolve) {
-        if (this.options.resolveWarnings && this.options.resolveWarnings.length) {
-          this.warnings = this.options.resolveWarnings;
-        }
-        if (this.options.resolveErrors && this.options.resolveErrors.length) {
-          this.errors = this.options.resolveErrors;
-        }
-        resolve(this);
-      } else {
-        reject(new Error(this.name + ': ' + this.options.rejectReason));
-      }
-    });
-    return promise;
-  }
-}
-
 class ErrorLinter extends FlosLinter {
   constructor(name, opts, ...errors) {
     super(name, opts);
@@ -38,6 +19,7 @@ class WarningLinter extends FlosLinter {
 
 function mockHandler() {
   return {
+    ok: sinon.spy(),
     finish: sinon.spy(),
     exit: sinon.spy(),
     error: sinon.spy(),
@@ -79,7 +61,7 @@ test('Can configure linters with global options', (t) => {
   t.true(linter.configure.calledWith(globalOpts));
 });
 
-test('Finishes without errors or warnings', (t) => {
+test('Runs linters without errors or warnings', (t) => {
   const linterA = new FlosLinter('a');
   const linterB = new FlosLinter('b');
   linterA.lint = sinon.spy();
@@ -87,36 +69,22 @@ test('Finishes without errors or warnings', (t) => {
   return run(linterA, linterB).then((handler) => {
     t.true(linterA.lint.calledOnce);
     t.true(linterB.lint.calledOnce);
-    t.true(handler.finish.calledOnce);
-    t.true(handler.finish.calledWith([], []));
-  });
+    t.true(handler.ok.calledOnce);
+  }).catch(() => t.fail());
 });
 
-test('Finishes with errors and warnings', (t) => {
+test('Runs linters with errors and warnings', (t) => {
   const linterA = new ErrorLinter('a');
-  const linterB = new TestLinter('b', { resolve: true });
+  const linterB = new FlosLinter('b');
   const linterC = new WarningLinter('c');
+  linterA.lint = sinon.spy();
+  linterB.lint = sinon.spy();
+  linterC.lint = sinon.spy();
   return run(linterA, linterB, linterC).then((handler) => {
-    t.true(handler.finish.calledOnce);
-    t.true(handler.finish.calledWith([ linterA ], [linterC]));
-  });
-});
-
-test('Exits on fatal errors and failEarly', (t) => {
-  const linterA = new ErrorLinter('a', { failEarly: true, failOnError: true });
-  const linterB = new TestLinter('b', { resolve: true });
-  return run(linterA, linterB).then((handler) => {
-    t.true(handler.exit.calledOnce);
-    t.true(handler.exit.calledWith([linterA], []));
-  });
-});
-
-test('Exits on fatal warnings and failEarly', (t) => {
-  const linterA = new WarningLinter('a', { failEarly: true, failOnWarning: true });
-  const linterB = new TestLinter('b', { resolve: true });
-  return run(linterA, linterB).then((handler) => {
-    t.true(handler.exit.calledOnce);
-    t.true(handler.exit.calledWith([], [ linterA ]));
+    t.true(linterA.lint.calledOnce);
+    t.true(linterB.lint.calledOnce);
+    t.true(linterC.lint.calledOnce);
+    t.true(handler.ok.calledOnce);
   });
 });
 

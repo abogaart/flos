@@ -1,6 +1,7 @@
 import test from 'ava';
 import sinon from 'sinon';
 import FlosHandler from '../lib/handlers/flos.handler';
+import FlosLinter from '../lib/linters/flos.linter';
 
 test('Has a default reporter', (t) => {
   handler = new FlosHandler();
@@ -38,4 +39,33 @@ test('Will report an error', (t) => {
   const error = new Error('error 1');
   handler.error(error);
   t.true(reporter.exception.calledOnce);
+});
+
+test('Exits on fatal errors and failEarly', (t) => {
+  const linterA = new FlosLinter('a', { failEarly: true, failOnError: true });
+  linterA.errors = ['error1'];
+  const linterB = new FlosLinter('b');
+  handler.exit = sinon.spy();
+  handler.ok([linterA, linterB]);
+  t.true(handler.exit.calledOnce);
+  t.true(handler.exit.calledWith([linterA], []));
+});
+
+test('Exits on fatal warnings and failEarly', (t) => {
+  const linterA = new FlosLinter('a', { failEarly: true, failOnWarning: true });
+  linterA.warnings = ['warning1'];
+  const linterB = new FlosLinter('b');
+  handler.exit = sinon.spy();
+  handler.ok([linterA, linterB]);
+  t.true(handler.exit.calledOnce);
+  t.true(handler.exit.calledWith([], [ linterA ]));
+});
+
+test('Finishes on OK', (t) => {
+  const linterA = new FlosLinter('a');
+  const linterB = new FlosLinter('b');
+  handler.finish = sinon.spy();
+  handler.ok([linterA, linterB]);
+  t.true(handler.finish.calledOnce);
+  t.true(handler.finish.calledWith([], []));
 });
