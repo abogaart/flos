@@ -30,6 +30,9 @@ class FlosReporter {
   exception(error) {
     this.print(this.formatter.formatException(error));
     this.print('Flos finished with error(s)');
+    if (process.env.NODE_ENV !== 'test') {
+      process.exit(1);
+    }
   }
 
   print(...str) {
