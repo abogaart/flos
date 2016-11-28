@@ -50,7 +50,7 @@ test('Stores errors and warnings if not early, and prints them on finish', (t) =
   t.is(reporter.print.callCount, 0);
 
   reporter.finish();
-  t.is(reporter.print.callCount, 4);
+  t.is(reporter.print.callCount, 4 + 1);
   t.is(formatter.formatError.callCount, 3);
   t.is(formatter.formatWarning.callCount, 1);
 });
@@ -69,6 +69,6 @@ test('Throws on fatal', (t) => {
 
 test('Prints an exception', (t) => {
   reporter.exception(new Error('error 1'));
-  t.true(reporter.print.calledOnce);
+  t.true(reporter.print.calledTwice);
   t.true(formatter.formatException.calledOnce);
 });
