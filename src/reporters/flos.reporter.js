@@ -29,6 +29,7 @@ class FlosReporter {
 
   exception(error) {
     this.print(this.formatter.formatException(error));
+    this.print('Flos finished with error(s)');
   }
 
   print(...str) {
@@ -38,6 +39,7 @@ class FlosReporter {
   finish() {
     this.errors.forEach((error) => this.print(this.formatter.formatError(error)));
     this.warnings.forEach((warning) => this.print(this.formatter.formatWarning(warning)));
+    this.print('Flos finished');
   }
 }
 
