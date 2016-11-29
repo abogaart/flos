@@ -1,4 +1,4 @@
-import FlosHandler from '../handlers/flos.handler';
+import FlosProcessor from '../processors/flos.processor';
 
 class FlosRunner {
 
@@ -14,7 +14,7 @@ class FlosRunner {
     this.linters.forEach((linter) => linter.configure(opts));
   }
 
-  run (handler = new FlosHandler()) {
+  run (processor = new FlosProcessor()) {
     const promises = this.linters.map((linter) => {
       try {
         return Promise.resolve(linter.lint());
@@ -23,9 +23,9 @@ class FlosRunner {
       }
     });
     return Promise.all(promises)
-    .then((linters) => handler.ok(linters))
+    .then((linters) => processor.process(linters))
     .catch((error) => {
-      handler.error(error);
+      processor.error(error);
       return error;
     });
   }

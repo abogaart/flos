@@ -1,12 +1,12 @@
 
 import FlosReporter from '../reporters/flos.reporter';
 
-class FlosHandler {
+class FlosProcessor {
   constructor(reporter = new FlosReporter()) {
     this.reporter = reporter;
   }
 
-  ok(linters) {
+  process(linters) {
     const errors = linters.filter((linter) => linter.hasErrors());
     const warns = linters.filter((linter) => linter.hasWarnings());
 
@@ -36,4 +36,4 @@ class FlosHandler {
   }
 }
 
-module.exports = FlosHandler;
+module.exports = FlosProcessor;
