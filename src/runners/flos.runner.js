@@ -31,4 +31,4 @@ class FlosRunner {
   }
 }
 
-module.exports = FlosRunner;
+export default FlosRunner;

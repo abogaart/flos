@@ -46,4 +46,4 @@ class FlosLinter {
 
 }
 
-module.exports = FlosLinter;
+export default FlosLinter;

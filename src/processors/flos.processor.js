@@ -36,4 +36,4 @@ class FlosProcessor {
   }
 }
 
-module.exports = FlosProcessor;
+export default FlosProcessor;

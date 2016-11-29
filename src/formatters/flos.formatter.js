@@ -76,4 +76,4 @@ class FlosFormatter {
   }
 }
 
-module.exports = FlosFormatter;
+export default FlosFormatter;

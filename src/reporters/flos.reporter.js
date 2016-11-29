@@ -46,4 +46,4 @@ class FlosReporter {
   }
 }
 
-module.exports = FlosReporter;
+export default FlosReporter;
