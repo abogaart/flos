@@ -15,18 +15,22 @@ class FlosRunner {
   }
 
   run (processor = new FlosProcessor()) {
-    const promises = this.linters.map((linter) => {
+    return Promise
+      .all(this._lintPromises())
+      .then((linters) => processor.process(linters))
+      .catch((error) => {
+        processor.error(error);
+        return error;
+      });
+  }
+
+  _lintPromises() {
+    return this.linters.map((linter) => {
       try {
         return Promise.resolve(linter.lint() || linter);
       } catch (e) {
         return Promise.reject(e);
       }
-    });
-    return Promise.all(promises)
-    .then((linters) => processor.process(linters))
-    .catch((error) => {
-      processor.error(error);
-      return error;
     });
   }
 }
