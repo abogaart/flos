@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-const flos = require('../lib/index');
+const flos = require('../lib/api');
 const FlosRunner = flos.Runner;
 
 // load config
