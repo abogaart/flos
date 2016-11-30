@@ -2,6 +2,7 @@
 import FlosReporter from './reporter';
 
 class FlosProcessor {
+
   constructor(reporter = new FlosReporter()) {
     this.reporter = reporter;
   }
