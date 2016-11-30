@@ -1,7 +1,7 @@
-import FlosProcessor from './processors/flos.processor';
-import FlosLinter from './linters/flos.linter';
-import FlosReporter from './reporters/flos.reporter';
-import FlosRunner from './runners/flos.runner';
+import FlosProcessor from './processor';
+import FlosLinter from './linter';
+import FlosReporter from './reporter';
+import FlosRunner from './runner';
 
 export const Linter = FlosLinter;
 export const Processor = FlosProcessor;

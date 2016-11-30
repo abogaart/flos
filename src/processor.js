@@ -1,5 +1,5 @@
 
-import FlosReporter from '../reporters/flos.reporter';
+import FlosReporter from './reporter';
 
 class FlosProcessor {
   constructor(reporter = new FlosReporter()) {

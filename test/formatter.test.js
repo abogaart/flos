@@ -1,6 +1,6 @@
 import test from 'ava';
-import FlosLinter from '../lib/linters/flos.linter';
-import FlosFormatter from '../lib/formatters/flos.formatter';
+import FlosLinter from '../lib/linter';
+import FlosFormatter from '../lib/formatter';
 
 let formatter;
 

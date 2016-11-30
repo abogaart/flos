@@ -8,8 +8,8 @@ class FlosLinter {
     this.warnings = [];
   }
 
-  configure(opts) {
-    this.options = Object.assign({}, opts, this.options);
+  configure(userOptions) {
+    this.options = Object.assign({}, userOptions, this.options);
   }
 
   lint() {

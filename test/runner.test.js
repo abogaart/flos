@@ -1,7 +1,7 @@
 import test from 'ava';
 import sinon from 'sinon';
-import FlosLinter from '../lib/linters/flos.linter';
-import FlosRunner from '../lib/runners/flos.runner';
+import FlosLinter from '../lib/linter';
+import FlosRunner from '../lib/runner';
 
 class ErrorLinter extends FlosLinter {
   constructor(name, opts, ...errors) {

@@ -1,4 +1,4 @@
-import FlosProcessor from '../processors/flos.processor';
+import FlosProcessor from './processor';
 
 class FlosRunner {
 

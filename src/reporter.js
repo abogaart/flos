@@ -1,4 +1,4 @@
-import FlosFormatter from '../formatters/flos.formatter';
+import FlosFormatter from './formatter';
 
 class FlosReporter {
   constructor(formatter = new FlosFormatter()) {

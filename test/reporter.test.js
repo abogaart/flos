@@ -1,7 +1,7 @@
 import test from 'ava';
 import sinon from 'sinon';
-import FlosLinter from '../lib/linters/flos.linter';
-import FlosReporter from '../lib/reporters/flos.reporter';
+import FlosLinter from '../lib/linter';
+import FlosReporter from '../lib/reporter';
 
 let formatter;
 let reporter;
