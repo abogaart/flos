@@ -17,7 +17,7 @@ class FlosRunner {
   run (processor = new FlosProcessor()) {
     const promises = this.linters.map((linter) => {
       try {
-        return Promise.resolve(linter.lint());
+        return Promise.resolve(linter.lint() || linter);
       } catch (e) {
         return Promise.reject(e);
       }

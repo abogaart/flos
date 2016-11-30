@@ -70,6 +70,7 @@ test('Runs linters without errors or warnings', (t) => {
     t.true(linterA.lint.calledOnce);
     t.true(linterB.lint.calledOnce);
     t.true(processor.process.calledOnce);
+    t.true(processor.process.calledWith([linterA, linterB]));
   }).catch(() => t.fail());
 });
 
@@ -85,6 +86,7 @@ test('Runs linters with errors and warnings', (t) => {
     t.true(linterB.lint.calledOnce);
     t.true(linterC.lint.calledOnce);
     t.true(processor.process.calledOnce);
+    t.true(processor.process.calledWith([linterA, linterB, linterC]));
   });
 });
 
@@ -129,4 +131,3 @@ test('Returns falsy when OK', (t) => {
   const processor = mockProcessor();
   return runner.run(processor).then((err) => t.falsy(err));
 });
-
