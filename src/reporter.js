@@ -1,6 +1,7 @@
 import FlosFormatter from './formatter';
 
 class FlosReporter {
+
   constructor(formatter = new FlosFormatter()) {
     this.formatter = formatter;
     this.errors = [];

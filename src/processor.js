@@ -17,7 +17,6 @@ class FlosProcessor {
     } else {
       this.finish(errors, warns);
     }
-
   }
 
   finish(errors, warnings) {
