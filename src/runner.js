@@ -1,4 +1,5 @@
 import FlosProcessor from './processor';
+import FlosReporter from './reporter';
 
 class FlosRunner {
 
@@ -14,12 +15,12 @@ class FlosRunner {
     this.linters.forEach((linter) => linter.configure(opts));
   }
 
-  run (processor = new FlosProcessor()) {
+  run (processor = new FlosProcessor(), reporter = new FlosReporter()) {
     return Promise
       .all(this._lintPromises())
-      .then((linters) => processor.process(linters))
+      .then((linters) => processor.process(linters, reporter))
       .catch((error) => {
-        processor.error(error);
+        reporter.exception(error);
         return error;
       });
   }

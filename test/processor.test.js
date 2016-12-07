@@ -14,58 +14,41 @@ test.beforeEach(() => {
     exception: sinon.spy(),
     finish: sinon.spy(),
   };
-  processor = new FlosProcessor(reporter);
-});
-
-test('Has a default reporter', (t) => {
   processor = new FlosProcessor();
-  t.truthy(processor.reporter);
-});
-
-test('Will report all errors and warnings on finish', (t) => {
-  processor.finish([ 'error1' , 'error 2' ], [ 'warning 1', 'warning 2', 'warning 3' ]);
-  t.is(reporter.error.callCount, 2);
-  t.is(reporter.warning.callCount, 3);
-});
-
-test('Will report all errors and warnings on exit', (t) => {
-  processor.exit([ 'error1' , 'error 2', 'error 3'], [ 'warning 1' ]);
-  t.is(reporter.error.callCount, 3);
-  t.is(reporter.warning.callCount, 1);
-  t.true(reporter.fatal.calledOnce);
-});
-
-test('Will report an error', (t) => {
-  const error = new Error('error 1');
-  processor.error(error);
-  t.true(reporter.exception.calledOnce);
-});
-
-test('Exits on fatal errors and failEarly', (t) => {
-  const linterA = new FlosLinter('a', { failEarly: true, failOnError: true });
-  linterA.errors = ['error1'];
-  const linterB = new FlosLinter('b');
-  processor.exit = sinon.spy();
-  processor.process([linterA, linterB]);
-  t.true(processor.exit.calledOnce);
-  t.true(processor.exit.calledWith([linterA], []));
-});
-
-test('Exits on fatal warnings and failEarly', (t) => {
-  const linterA = new FlosLinter('a', { failEarly: true, failOnWarning: true });
-  linterA.warnings = ['warning1'];
-  const linterB = new FlosLinter('b');
-  processor.exit = sinon.spy();
-  processor.process([linterA, linterB]);
-  t.true(processor.exit.calledOnce);
-  t.true(processor.exit.calledWith([], [ linterA ]));
 });
 
 test('Finishes without warning and errors', (t) => {
   const linterA = new FlosLinter('a');
   const linterB = new FlosLinter('b');
-  processor.finish = sinon.spy();
-  processor.process([linterA, linterB]);
-  t.true(processor.finish.calledOnce);
-  t.true(processor.finish.calledWith([], []));
+  processor.process([linterA, linterB], reporter);
+  t.true(reporter.finish.calledOnce);
+});
+
+test('Finishes with errors and warnings', (t) => {
+  const linterA = new FlosLinter('a');
+  linterA.errors = ['error1', 'error2'];
+  const linterB = new FlosLinter('b');
+  linterB.errors = ['error3'];
+  const linterC = new FlosLinter('c');
+  linterC.warnings = ['warning1'];
+  const linterD = new FlosLinter('d');
+  processor.process([linterA, linterB, linterC, linterD], reporter);
+  t.is(reporter.error.callCount, 2);
+  t.is(reporter.warning.callCount, 1);
+  t.true(reporter.finish.calledOnce);
+});
+
+test('Detects fatal linters', (t) => {
+  const linterA = new FlosLinter('a', { failEarly: true, failOnError: true });
+  linterA.errors = ['error1'];
+  processor.process([linterA], reporter);
+  t.true(reporter.fatal.calledOnce);
+  t.true(reporter.fatal.calledWith([linterA], []));
+
+  reporter.fatal.reset();
+  const linterB = new FlosLinter('b', { failEarly: true, failOnWarning: true });
+  linterB.warnings = ['warning1'];
+  processor.process([linterB], reporter);
+  t.true(reporter.fatal.calledOnce);
+  t.true(reporter.fatal.calledWith([], [linterB]));
 });

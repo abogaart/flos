@@ -26,10 +26,23 @@ function mockProcessor() {
   };
 }
 
+function mockReporter() {
+  return {
+    error: sinon.spy(),
+    warning: sinon.spy(),
+    fatal: sinon.spy(),
+    exception: sinon.spy(),
+    finish: sinon.spy(),
+  };
+}
+
 function run(...linters) {
   const runner = new FlosRunner(...linters);
   const processor = mockProcessor();
-  return runner.run(processor).then(() => processor);
+  const reporter = mockReporter();
+  return runner.run(processor, reporter).then(() => {
+    return { processor, reporter };
+  });
 }
 
 test('Can be instantiated with linters as arguments', (t) => {
@@ -66,11 +79,11 @@ test('Runs linters without errors or warnings', (t) => {
   const linterB = new FlosLinter('b');
   linterA.lint = sinon.spy();
   linterB.lint = sinon.spy();
-  return run(linterA, linterB).then((processor) => {
+  return run(linterA, linterB).then((f) => {
     t.true(linterA.lint.calledOnce);
     t.true(linterB.lint.calledOnce);
-    t.true(processor.process.calledOnce);
-    t.true(processor.process.calledWith([linterA, linterB]));
+    t.true(f.processor.process.calledOnce);
+    t.true(f.processor.process.calledWith([linterA, linterB]));
   }).catch(() => t.fail());
 });
 
@@ -81,34 +94,34 @@ test('Runs linters with errors and warnings', (t) => {
   linterA.lint = sinon.spy();
   linterB.lint = sinon.spy();
   linterC.lint = sinon.spy();
-  return run(linterA, linterB, linterC).then((processor) => {
+  return run(linterA, linterB, linterC).then((f) => {
     t.true(linterA.lint.calledOnce);
     t.true(linterB.lint.calledOnce);
     t.true(linterC.lint.calledOnce);
-    t.true(processor.process.calledOnce);
-    t.true(processor.process.calledWith([linterA, linterB, linterC]));
+    t.true(f.processor.process.calledOnce);
+    t.true(f.processor.process.calledWith([linterA, linterB, linterC]));
   });
 });
 
-test('Errors on exception', (t) => {
+test('Reports an exception when lint throws an error', (t) => {
   const linterA = new FlosLinter('a');
   const error = new Error('error a');
   linterA.lint = () => {
     throw error;
   };
-  return run(linterA).then((processor) => {
-    t.true(processor.error.calledOnce);
-    t.true(processor.error.calledWith(error));
+  return run(linterA).then((f) => {
+    t.true(f.reporter.exception.calledOnce);
+    t.true(f.reporter.exception.calledWith(error));
   });
 });
 
-test('Errors on rejection', (t) => {
+test('Reports an exception when lint is rejected', (t) => {
   const linterA = new FlosLinter('a');
   const error = new Error('error a');
   linterA.lint = () => Promise.reject(error);
-  return run(linterA).then((processor) => {
-    t.true(processor.error.calledOnce);
-    t.true(processor.error.calledWith(error));
+  return run(linterA).then((f) => {
+    t.true(f.reporter.exception.calledOnce);
+    t.true(f.reporter.exception.calledWith(error));
   });
 });
 
@@ -116,18 +129,15 @@ test('Returns error when caught', (t) => {
   const linterA = new FlosLinter('a');
   const error = new Error('error a');
   linterA.lint = () => Promise.reject(error);
-  const runner = new FlosRunner(linterA);
 
-  const processor = mockProcessor();
-  return runner.run(processor).then((err) => {
-    t.is(err, error);
-  });
+  return new FlosRunner(linterA)
+    .run(mockProcessor(), mockReporter())
+    .then((err) => t.is(err, error));
 });
 
 test('Returns falsy when OK', (t) => {
   const linterA = new FlosLinter('a');
-  const runner = new FlosRunner(linterA);
-
-  const processor = mockProcessor();
-  return runner.run(processor).then((err) => t.falsy(err));
+  return new FlosRunner(linterA)
+    .run(mockProcessor(), mockReporter())
+    .then((err) => t.falsy(err));
 });
