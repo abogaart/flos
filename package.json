@@ -42,10 +42,10 @@
     "build-watch": "babel -w src/ --out-dir lib/",
     "coverage": "nyc report --reporter=json && codecov -f coverage/coverage-final.json",
     "lint": "eslint src test",
-    "preversion": "npm test",
-    "prepublish": "npm run build",
-    "test": "npm run lint && npm run build && npm run test-only",
-    "test-ci": "cross-env BABEL_ENV=test npm run build && nyc --reporter=text-summary --reporter=lcov npm run test-only",
+    "preversion": "yarn test",
+    "prepublish": "yarn run build",
+    "test": "yarn run lint && yarn run build && yarn run test-only",
+    "test-ci": "cross-env BABEL_ENV=test yarn run build && nyc --reporter=text-summary --reporter=lcov yarn run test-only",
     "test-only": "NODE_ENV=test ava"
   },
   "nyc": {
