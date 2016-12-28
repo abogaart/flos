@@ -13,7 +13,7 @@
     "lib"
   ],
   "main": "lib/index.js",
-  "author": "Arthur Bogaart <a.bogaart@onehippo.com>",
+  "author": "Arthur Bogaart <arthur.bogaart@bloomreach.com>",
   "license": "MIT",
   "dependencies": {
     "chalk": "^1.1.3"
