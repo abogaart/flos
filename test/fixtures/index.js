@@ -1,7 +1,7 @@
 import path from 'path';
 import os from 'os';
 import fs from 'fs';
-import {cp, ln, mkdir, rm, test, ls} from 'shelljs';
+import {cp, ln, mkdir, rm, test} from 'shelljs';
 
 const links = path.join(process.cwd(), '/test/links');
 
@@ -20,10 +20,6 @@ function setup(link, fixture) {
   }
   // in 'links' folder, create a symlink to the tmp fixture folder
   ln('-sf', dir, link);
-  console.log('Created link ' + link + ' to ' + dir);
-  ls('-RAd', dir).forEach(file => {
-    console.log(file);
-  });
 
   return link;
 }
