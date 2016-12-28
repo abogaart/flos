@@ -11,7 +11,7 @@ matrix:
     - node_js: "lts/*"
       env: LINT=true
 script:
-  - 'if [ -n "${LINT-}" ]; then npm run lint ; fi'
-  - 'if [ -z "${LINT-}" ]; then npm run test-ci ; fi'
+  - 'if [ -n "${LINT-}" ]; then yarn run lint ; fi'
+  - 'if [ -z "${LINT-}" ]; then yarn run test-ci ; fi'
 after_success:
-  - npm run coverage
+  - yarn run coverage
