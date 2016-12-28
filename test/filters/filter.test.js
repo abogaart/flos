@@ -3,23 +3,23 @@ import sinon from 'sinon';
 import Filter from '../../src/filters/filter';
 
 // basedir configuration
-test('process.cwd() is the default baseDir', (t) => {
+test('process.cwd() is the default baseDir', t => {
   const filter = new Filter();
   t.is(filter.getBaseDir(), process.cwd());
 });
 
-test('the value of baseDir is configurable', (t) => {
+test('the value of baseDir is configurable', t => {
   const filter = new Filter({cwd: 'testcwd'});
   t.is(filter.getBaseDir(), 'testcwd');
 });
 
 // default behavior
-test('ignores files by default', (t) => {
+test('ignores files by default', t => {
   const filter = new Filter();
   t.false(filter.apply('path/to/file.js'));
 });
 
-test('throws exception when apply is called with an empty path', (t) => {
+test('throws exception when apply is called with an empty path', t => {
   const filter = new Filter();
   const customError = 'Expected filePath argument of type string';
 
@@ -33,7 +33,7 @@ test('throws exception when apply is called with an empty path', (t) => {
 });
 
 // filter calling
-test('calls filter with an absolute path, and a path relative to the baseDir', (t) => {
+test('calls filter with an absolute path, and a path relative to the baseDir', t => {
   const filter = new Filter({ cwd: '/' });
   const spy = sinon.spy(filter, 'filter');
 
@@ -53,7 +53,7 @@ test('calls filter with an absolute path, and a path relative to the baseDir', (
   spy.reset();
 });
 
-test('handles baseDir correctly when calling filter', (t) => {
+test('handles baseDir correctly when calling filter', t => {
   const filter = new Filter({ cwd: '/root' });
   const spy = sinon.spy(filter, 'filter');
 
@@ -80,7 +80,7 @@ test('handles baseDir correctly when calling filter', (t) => {
 });
 
 // file tracking
-test('tracks filtered files by default', (t) => {
+test('tracks filtered files by default', t => {
   const filter = new Filter({ cwd: '/' });
   sinon.stub(filter, 'filter').returns(true);
 
@@ -88,7 +88,7 @@ test('tracks filtered files by default', (t) => {
   t.true(filter.tracking('/path/to/files.js'));
 });
 
-test('tracks only filtered files', (t) => {
+test('tracks only filtered files', t => {
   const filter = new Filter({ cwd: '/' });
   sinon.stub(filter, 'filter')
     .withArgs('/path/to/files.js', 'path/to/files.js')
@@ -101,7 +101,7 @@ test('tracks only filtered files', (t) => {
   t.false(filter.tracking('/path/to/files2.js'));
 });
 
-test('does not track filtered files when options.trackFiltered is false', (t) => {
+test('does not track filtered files when options.trackFiltered is false', t => {
   const filter = new Filter({ cwd: '/', trackFiltered: false });
   sinon.stub(filter, 'filter').returns(true);
 

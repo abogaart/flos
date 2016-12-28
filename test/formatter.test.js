@@ -8,21 +8,21 @@ test.beforeEach(() => {
   formatter = new FlosFormatter();
 });
 
-test('Formats errors', (t) => {
+test('Formats errors', t => {
   const linterA = new FlosLinter('a');
   linterA.errors = [ 'err1', 'err2' ];
   const errMsg = formatter.formatErrors(linterA);
   t.is(errMsg, 'Errors from a\nerr1\nerr2');
 });
 
-test('Formats warnings', (t) => {
+test('Formats warnings', t => {
   const linterB = new FlosLinter('b');
   linterB.warnings = [ 'warn1', 'warn2' ];
   const warnMsg = formatter.formatWarnings(linterB);
   t.is(warnMsg, 'Warnings from b\nwarn1\nwarn2');
 });
 
-test('Formats fatals', (t) => {
+test('Formats fatals', t => {
   const err1 = new FlosLinter('e1');
   err1.errors = [ 'err1' ];
   const err2 = new FlosLinter('e2');
@@ -69,7 +69,7 @@ test('Formats fatals', (t) => {
     'and 4 warnings in linters w1, w2 and w3');
 });
 
-test('Formats exception', (t) => {
+test('Formats exception', t => {
   const linterA = new FlosLinter('a');
   linterA.errors = [ 'err1', 'err2' ];
   const linterB = new FlosLinter('b');

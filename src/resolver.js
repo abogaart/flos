@@ -54,8 +54,8 @@ class Resolver {
     const opts = Object.assign({}, DEFAULT_OPTS, options);
 
     this.filters =  opts.filters || [];
-    this.include = asArray(opts.include).map((glob) => pathUtil.canonicalize(glob));
-    this.exclude = asArray(opts.exclude).map((glob) => pathUtil.canonicalize(glob));
+    this.include = asArray(opts.include).map(glob => pathUtil.canonicalize(glob));
+    this.exclude = asArray(opts.exclude).map(glob => pathUtil.canonicalize(glob));
 
     opts.dotFiles = opts.dotFiles || this.globIncludesDotfiles(this.include);
 
@@ -113,9 +113,9 @@ class Resolver {
       return Promise.resolve([]);
     }
 
-    return this.glob(this.include).then((files) => {
+    return this.glob(this.include).then(files => {
       debug('Found %s files, running %s filter(s)', files.length, this.filters.length);
-      return files.filter((file) => this.includeFile(file));
+      return files.filter(file => this.includeFile(file));
     });
   }
 

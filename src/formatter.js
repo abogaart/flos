@@ -54,9 +54,9 @@ class FlosFormatter {
   }
 
   formatFatal(fatal, type, prop, color = chalk.red) {
-    const num = fatal.map((linter) => linter[prop]).reduce((prev, curr) => prev + curr.length, 0);
+    const num = fatal.map(linter => linter[prop]).reduce((prev, curr) => prev + curr.length, 0);
     const lastIndex = fatal.length - 1;
-    const linters = fatal.map((linter) => `${chalk.blue(linter.name)}`).reduce((prev, curr, index) => {
+    const linters = fatal.map(linter => `${chalk.blue(linter.name)}`).reduce((prev, curr, index) => {
       if (index > 0) {
         return index === lastIndex ? `${prev} and ${curr}` : `${prev}, ${curr}`;
       }

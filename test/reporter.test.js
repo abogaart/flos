@@ -38,7 +38,7 @@ test('Prints to the console', t => {
   t.true(stub.calledWithExactly('one', 'two'));
 });
 
-test('Prints errors and warnings early', (t) => {
+test('Prints errors and warnings early', t => {
   const linter = new FlosLinter('a', { printEarly: true });
   linter.errors = [ 'a', 'b' ];
   reporter.error(linter);
@@ -51,7 +51,7 @@ test('Prints errors and warnings early', (t) => {
   t.is(formatter.formatWarnings.callCount, 1);
 });
 
-test('Stores errors and warnings if not early, and prints them on finish', (t) => {
+test('Stores errors and warnings if not early, and prints them on finish', t => {
   const linter = new FlosLinter('a');
   linter.errors = [ 'a', 'b' ];
   linter.warnings = [ 'c' ];
@@ -75,7 +75,7 @@ test('Stores errors and warnings if not early, and prints them on finish', (t) =
   t.is(formatter.formatWarning.callCount, 1);
 });
 
-test('Throws on fatal', (t) => {
+test('Throws on fatal', t => {
   const linter = new FlosLinter('a');
   linter.errors = [ 'a', 'b' ];
   linter.warnings = [ 'c' ];
@@ -87,7 +87,7 @@ test('Throws on fatal', (t) => {
   t.true(formatter.formatFatals.calledOnce);
 });
 
-test('Prints an exception', (t) => {
+test('Prints an exception', t => {
   reporter.exception(new Error('error 1'));
   t.true(reporter.print.calledTwice);
   t.true(formatter.formatException.calledOnce);

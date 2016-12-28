@@ -31,7 +31,7 @@ function run(...linters) {
   });
 }
 
-test('Can be instantiated with linters as arguments', (t) => {
+test('Can be instantiated with linters as arguments', t => {
   const linterA = new FlosLinter('a');
   const linterB = new FlosLinter('b');
   const runner = new FlosRunner(linterA, linterB);
@@ -40,7 +40,7 @@ test('Can be instantiated with linters as arguments', (t) => {
   t.is(runner.linters[1], linterB);
 });
 
-test('Can be instantiated with an array of linters as the single argument', (t) => {
+test('Can be instantiated with an array of linters as the single argument', t => {
   const linterA = new FlosLinter('a');
   const linterB = new FlosLinter('b');
   const linters = [linterA, linterB];
@@ -50,7 +50,7 @@ test('Can be instantiated with an array of linters as the single argument', (t) 
   t.is(runner.linters[1], linterB);
 });
 
-test('Can configure linters with global options', (t) => {
+test('Can configure linters with global options', t => {
   const linter = new FlosLinter('a');
   linter.configure = sinon.spy();
   const runner = new FlosRunner(linter);
@@ -60,12 +60,12 @@ test('Can configure linters with global options', (t) => {
   t.true(linter.configure.calledWith(globalOpts));
 });
 
-test('Runs linters without errors or warnings', (t) => {
+test('Runs linters without errors or warnings', t => {
   const linterA = new FlosLinter('a');
   const linterB = new FlosLinter('b');
   linterA.lint = sinon.spy();
   linterB.lint = sinon.spy();
-  return run(linterA, linterB).then((f) => {
+  return run(linterA, linterB).then(f => {
     t.true(linterA.lint.calledOnce);
     t.true(linterB.lint.calledOnce);
     t.true(f.processor.process.calledOnce);
@@ -73,7 +73,7 @@ test('Runs linters without errors or warnings', (t) => {
   }).catch(() => t.fail());
 });
 
-test('Runs linters with errors and warnings', (t) => {
+test('Runs linters with errors and warnings', t => {
   const linterA = new FlosLinter('a');
   const linterB = new FlosLinter('b');
   const linterC = new FlosLinter('c');
@@ -82,7 +82,7 @@ test('Runs linters with errors and warnings', (t) => {
   linterC.lint = sinon.spy();
   linterA.errors = [ 'error1' ];
   linterB.warnings = [ 'warning1' ];
-  return run(linterA, linterB, linterC).then((f) => {
+  return run(linterA, linterB, linterC).then(f => {
     t.true(linterA.lint.calledOnce);
     t.true(linterB.lint.calledOnce);
     t.true(linterC.lint.calledOnce);
@@ -91,41 +91,41 @@ test('Runs linters with errors and warnings', (t) => {
   }).catch(() => t.fail());
 });
 
-test('Reports an exception when lint throws an error', (t) => {
+test('Reports an exception when lint throws an error', t => {
   const linterA = new FlosLinter('a');
   const error = new Error('error a');
   linterA.lint = () => {
     throw error;
   };
-  return run(linterA).then((f) => {
+  return run(linterA).then(f => {
     t.true(f.reporter.exception.calledOnce);
     t.true(f.reporter.exception.calledWith(error));
   });
 });
 
-test('Reports an exception when lint is rejected', (t) => {
+test('Reports an exception when lint is rejected', t => {
   const linterA = new FlosLinter('a');
   const error = new Error('error a');
   linterA.lint = () => Promise.reject(error);
-  return run(linterA).then((f) => {
+  return run(linterA).then(f => {
     t.true(f.reporter.exception.calledOnce);
     t.true(f.reporter.exception.calledWith(error));
   });
 });
 
-test('Returns error when caught', (t) => {
+test('Returns error when caught', t => {
   const linterA = new FlosLinter('a');
   const error = new Error('error a');
   linterA.lint = () => Promise.reject(error);
 
   return new FlosRunner(linterA)
     .run(mockProcessor(), mockReporter())
-    .then((err) => t.is(err, error));
+    .then(err => t.is(err, error));
 });
 
-test('Returns falsy when OK', (t) => {
+test('Returns falsy when OK', t => {
   const linterA = new FlosLinter('a');
   return new FlosRunner(linterA)
     .run(mockProcessor(), mockReporter())
-    .then((err) => t.falsy(err));
+    .then(err => t.falsy(err));
 });

@@ -9,7 +9,7 @@ test.before(() => {
   fixture = fixtures.fixture('ignore-file-filter');
 });
 
-test('sets baseDir to cwd when no ignore file was found', (t) => {
+test('sets baseDir to cwd when no ignore file was found', t => {
   const filter = new IgnoreFileFilter({
     cwd: fixture("no-ignore-file")
   });

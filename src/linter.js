@@ -63,7 +63,7 @@ class FlosLinter {
     }
 
     debug('Starting lint');
-    return this.resolver.getFiles().then((files) => {
+    return this.resolver.getFiles().then(files => {
       debug('Files to lint', files);
       return this;
     });
