@@ -28,11 +28,11 @@ function files(opts) {
 }
 
 function contains(t, value, ...expected) {
-  expected.forEach(expect => t.true(value.includes(expect), 'checking if value contains ' + expect));
+  expected.forEach(expect => t.true(value.includes(expect), 'checking if ' + value + ' contains ' + expect));
 }
 
 function notContains(t, value, ...expected) {
-  expected.forEach(expect => t.false(value.includes(expect), 'checking if value contains ' + expect));
+  expected.forEach(expect => t.false(value.includes(expect), 'checking if ' + value + ' contains ' + expect));
 }
 
 function equals(t, value, ...expected) {
