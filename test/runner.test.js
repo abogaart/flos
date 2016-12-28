@@ -1,21 +1,7 @@
 import test from 'ava';
 import sinon from 'sinon';
-import FlosLinter from '../lib/linter';
-import FlosRunner from '../lib/runner';
-
-class ErrorLinter extends FlosLinter {
-  constructor(name, opts, ...errors) {
-    super(name, opts);
-    this.errors = errors.length ? errors : [ 'error 1' ];
-  }
-}
-
-class WarningLinter extends FlosLinter {
-  constructor(name, opts, ...warnings) {
-    super(name, opts);
-    this.warnings = warnings.length ? warnings : [ 'warning 1' ];
-  }
-}
+import FlosLinter from '../src/linter';
+import FlosRunner from '../src/runner';
 
 function mockProcessor() {
   return {
@@ -88,19 +74,21 @@ test('Runs linters without errors or warnings', (t) => {
 });
 
 test('Runs linters with errors and warnings', (t) => {
-  const linterA = new ErrorLinter('a');
+  const linterA = new FlosLinter('a');
   const linterB = new FlosLinter('b');
-  const linterC = new WarningLinter('c');
+  const linterC = new FlosLinter('c');
   linterA.lint = sinon.spy();
   linterB.lint = sinon.spy();
   linterC.lint = sinon.spy();
+  linterA.errors = [ 'error1' ];
+  linterB.warnings = [ 'warning1' ];
   return run(linterA, linterB, linterC).then((f) => {
     t.true(linterA.lint.calledOnce);
     t.true(linterB.lint.calledOnce);
     t.true(linterC.lint.calledOnce);
     t.true(f.processor.process.calledOnce);
     t.true(f.processor.process.calledWith([linterA, linterB, linterC]));
-  });
+  }).catch(() => t.fail());
 });
 
 test('Reports an exception when lint throws an error', (t) => {

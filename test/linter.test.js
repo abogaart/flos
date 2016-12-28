@@ -1,5 +1,7 @@
 import test from 'ava';
-import FlosLinter from '../lib/linter';
+import sinon from 'sinon';
+
+import FlosLinter from '../src/linter';
 
 test('Has a name', (t) => {
   const linter = new FlosLinter('test-name');
