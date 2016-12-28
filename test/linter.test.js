@@ -1,24 +1,26 @@
 import test from 'ava';
-import FlosLinter from '../lib/linter';
+import sinon from 'sinon';
 
-test('Has a name', (t) => {
+import FlosLinter from '../src/linter';
+
+test('Has a name', t => {
   const linter = new FlosLinter('test-name');
   t.is(linter.getName(), 'test-name');
 });
 
-test('Options can be extended by global options', (t) => {
+test('Options can be extended by global options', t => {
   const linter = new FlosLinter('test-name', { a: 'a' });
   linter.configure({ b: 'b' });
-  t.deepEqual(linter.options, { a: 'a', b: 'b' });
+  t.deepEqual(linter.options, { a: 'a', b: 'b', include: [], exclude: [] });
 });
 
-test('Options are not overriden by global options', (t) => {
+test('Options are not overriden by global options', t => {
   const linter = new FlosLinter('test-name', { a: 'a' });
   linter.configure({ a: 'b' });
-  t.deepEqual(linter.options, { a: 'a'});
+  t.deepEqual(linter.options, { a: 'a', include: [], exclude: []});
 });
 
-test('Has default options', (t) => {
+test('Has default options', t => {
   const linter = new FlosLinter('test-name');
   t.false(linter.isPrintEarly());
   t.false(linter.isFailEarly());
@@ -26,7 +28,7 @@ test('Has default options', (t) => {
   t.false(linter.isFailOnWarning());
 });
 
-test('Options are set and immutable', (t) => {
+test('Options are set and immutable', t => {
   const opts = {
     failEarly: true,
     printEarly: true,
@@ -43,7 +45,7 @@ test('Options are set and immutable', (t) => {
   t.true(linter.isPrintEarly());
 });
 
-test('Has errors and warnings', (t) => {
+test('Has errors and warnings', t => {
   const linter = new FlosLinter('test-name');
   t.false(linter.hasErrors());
   t.false(linter.hasWarnings());
@@ -54,8 +56,22 @@ test('Has errors and warnings', (t) => {
   t.true(linter.hasWarnings());
 });
 
-test('Should resolve a promise with a reference to itself on a succesful lint operation', (t) => {
+test('Should resolve a promise with a reference to itself on a succesful lint operation', t => {
   const linter = new FlosLinter('test-name');
-  return linter.lint().then((result) => t.is(result, linter));
+  return linter.lint().then(result => t.is(result, linter));
+});
+
+test('Create a new resolver when starting a lint operation', t => {
+  const linter = new FlosLinter('test-name');
+  const spy = sinon.spy(linter, 'createResolver');
+  return linter.lint().then(() => t.true(spy.calledOnce));
+});
+
+test('Reuses resolver if it already exists', t => {
+  const linter = new FlosLinter('test-name');
+  const spy = sinon.spy(linter, 'createResolver');
+  return linter.lint().then(() => {
+    return linter.lint().then(() => t.true(spy.calledOnce));
+  });
 });
 
