@@ -1,6 +1,10 @@
 import FlosProcessor from './processor';
 import FlosReporter from './reporter';
 
+/**
+ * Main entry point for starting a flos run. It runs all the linters and processes the results
+ * with a FlosProcessor. The results are reported to the user with a FlosReporter.
+ */
 class FlosRunner {
 
   constructor(...linters) {

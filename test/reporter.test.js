@@ -5,6 +5,15 @@ import FlosReporter from '../src/reporter';
 
 let formatter;
 let reporter;
+let sandbox;
+
+test.beforeEach(function() {
+  sandbox = sinon.sandbox.create();
+});
+
+test.afterEach(function() {
+  sandbox.restore();
+});
 
 test.beforeEach(() => {
   formatter = {};
@@ -16,6 +25,17 @@ test.beforeEach(() => {
   formatter.formatException = sinon.spy();
   reporter = new FlosReporter(formatter);
   reporter.print = sinon.spy();
+});
+
+test('Has a default formatter', t => {
+  t.truthy(new FlosReporter().formatter);
+});
+
+test('Prints to the console', t => {
+  const stub = sinon.stub(console, 'log');
+  new FlosReporter().print('one', 'two');
+  t.true(stub.calledOnce);
+  t.true(stub.calledWithExactly('one', 'two'));
 });
 
 test('Prints errors and warnings early', (t) => {
