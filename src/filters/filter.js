@@ -39,9 +39,10 @@ class Filter {
       throw new Error('Expected filePath argument of type string');
     }
 
-    const absolutePath = path.resolve(this.getBaseDir(), filePath.trim());
-    console.log('To relative', absolutePath, this.getBaseDir());
-    const relativePath = pathUtil.toRelative(absolutePath, this.getBaseDir());
+    const base = path.resolve(this.options.cwd);
+    const absolutePath = path.resolve(base, filePath.trim());
+    console.log('To relative', absolutePath, base);
+    const relativePath = pathUtil.toRelative(absolutePath, base);
     const isFiltered = this.filter(absolutePath, relativePath);
 
     if (isFiltered && this.options.trackFiltered) {

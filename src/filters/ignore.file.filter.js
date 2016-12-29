@@ -63,7 +63,7 @@ class IgnoreFileFilter extends IgnoreFilter {
    * @returns {string} Path of ignore file or an empty string.
    */
   findIgnoreFile() {
-    const ignoreFilePath = path.resolve(this.options.cwd, this.options.ignoreFileName || '');
+    const ignoreFilePath = path.resolve(this.getBaseDir(), this.options.ignoreFileName || '');
     debug(`Looking for ignore file with path ${ignoreFilePath}`);
     return shell.test('-f', ignoreFilePath) ? ignoreFilePath : '';
   }
