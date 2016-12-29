@@ -1,6 +1,7 @@
-import path from 'path';
-import os from 'os';
 import fs from 'fs';
+import os from 'os';
+import path from 'path';
+import pathUtil from 'path-util';
 import {cp, ln, mkdir, rm, test} from 'shelljs';
 
 const links = path.join(process.cwd(), '/test/links');
@@ -36,7 +37,7 @@ function fixture(name) {
   }
 
   const root = fs.realpathSync(link);
-  return (...paths) => path.join(root, ...paths);
+  return (...paths) => pathUtil.canonicalize(path.join(root, ...paths));
 }
 
 module.exports = {

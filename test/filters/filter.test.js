@@ -4,7 +4,7 @@ import test from 'ava';
 import sinon from 'sinon';
 import Filter from '../../src/filters/filter';
 
-const cwd = process.cwd();
+const cwd = pathUtil.canonicalize(process.cwd());
 const root = path.resolve('/');
 const base = path.resolve('/root/base');
 
@@ -16,18 +16,18 @@ const absPathToFile = pathUtil.toAbsolute(relPathToFile, root);
 // basedir configuration
 test('process.cwd() is the default baseDir', t => {
   const filter = new Filter();
-  t.is(filter.getBaseDir(), process.cwd());
+  t.is(filter.getBaseDir(), cwd);
 });
 
 test('has a configurable basedir', t => {
-  const baseDir = path.join(cwd, 'testcwd');
+  const baseDir = pathUtil.toAbsolute('testcwd', cwd);
   const filter = new Filter({cwd: baseDir});
   t.is(filter.getBaseDir(), baseDir);
 });
 
 test('resolves a basedir with a relative path to an abslute path, relative to process.cwd()', t => {
   const relativePath = new Filter({cwd: 'testcwd'});
-  t.is(relativePath.getBaseDir(), path.join(cwd, 'testcwd'));
+  t.is(relativePath.getBaseDir(), pathUtil.toAbsolute('testcwd', cwd));
 });
 
 // default behavior
@@ -66,6 +66,7 @@ test('calls filter with an absolute path, and a path relative to the baseDir', t
 
   filter.apply('/root/base/path/to/file.js');
   t.true(spy.calledOnce);
+  console.log('YIDAMAN0', spy.args);
   t.true(spy.calledWithExactly(pathUtil.toAbsolute(relPathToFile, base), relPathToFile));
 });
 
@@ -78,6 +79,7 @@ test('handles baseDir == root correctly', t => {
   spy.reset();
 
   filter.apply('/file.js');
+  console.log('YIDAMAN1', spy.args);
   t.true(spy.calledWithExactly(absFile, relFile));
   spy.reset();
 
@@ -95,6 +97,7 @@ test('handles path outside of baseDir correctly', t => {
   const spy = sinon.spy(filter, 'filter');
 
   filter.apply('/file.js');
+  console.log('YIDAMAN2', spy.args);
   t.true(spy.calledOnce);
   t.true(spy.calledWithExactly(absFile, '../../file.js'));
   spy.reset();
