@@ -53,7 +53,7 @@
     "prepublish": "yarn run build",
     "test": "yarn run lint && yarn run build && yarn run test-only",
     "test-ci": "cross-env BABEL_ENV=test yarn run build && nyc --reporter=text-summary --reporter=lcov yarn run test-only",
-    "test-only": "NODE_ENV=test ava"
+    "test-only": "cross-env NODE_ENV=test ava"
   },
   "nyc": {
     "all": true,
