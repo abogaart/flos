@@ -41,8 +41,10 @@ class Filter {
 
     const base = path.resolve(this.options.cwd);
     const absolutePath = path.resolve(base, filePath.trim());
-    console.log('To relative', absolutePath, base);
     const relativePath = pathUtil.toRelative(absolutePath, base);
+    console.log('Base', base);
+    console.log('Absolute', absolutePath);
+    console.log('Relative', relativePath);
     const isFiltered = this.filter(absolutePath, relativePath);
 
     if (isFiltered && this.options.trackFiltered) {
