@@ -41,19 +41,15 @@ class Filter {
       throw new Error('Expected filePath argument of type string');
     }
 
-    const path = filePath.trim();
     const base = this.getBaseDir();
-    const absolutePath = pathUtil.isAbsolute(path) ? path : pathUtil.toAbsolute(path, base);
-    let relativePath;
-    if (pathUtil.isBasePath(base, absolutePath)) {
-      relativePath = pathUtil.toRelative(absolutePath, base);
-    } else {
-      relativePath = pathUtil.toRelative(pathUtil.getRoot(base), base) + absolutePath;
-    }
-    const isFiltered = this.filter(absolutePath, relativePath);
+    const path = pathUtil.canonicalize(filePath);
+    const absPath = pathUtil.isAbsolute(path) ? path : pathUtil.toAbsolute(path, base);
+    const relPath = pathUtil.isBasePath(base, absPath) ?
+          pathUtil.toRelative(absPath, base) : pathUtil.toRelative(pathUtil.getRoot(base), base) + absPath;
+    const isFiltered = this.filter(absPath, relPath);
 
     if (isFiltered && this.options.trackFiltered) {
-      this.track(absolutePath, relativePath);
+      this.track(absPath, relPath);
     }
     return isFiltered;
   }
