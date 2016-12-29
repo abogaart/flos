@@ -64,7 +64,7 @@ test('calls filter with an absolute path, and a path relative to the baseDir', t
 
   // outside of baseDir
   filter.apply('/file.js');
-  t.true(spy.calledWithExactly('/file.js', '../file.js'));
+  t.true(spy.calledWithExactly(pathUtil.toAbsolute('file.js', root), '../file.js'));
   spy.reset();
 
   filter.apply('/path/to/file.js');
