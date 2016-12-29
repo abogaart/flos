@@ -1,0 +1,28 @@
+environment:
+  matrix:
+    - nodejs_version: "7"
+    - nodejs_version: "6"
+    - nodejs_version: "4"
+
+cache:
+ - node_modules
+ - "%LOCALAPPDATA%/Yarn"
+
+branches:
+  only:
+  - master
+  - /v[0-9]+(\.[0-9]+)*/
+
+install:
+  - ps: Install-Product node $env:node_version
+  - yarn install
+
+matrix:
+  fast_finish: true
+
+build: off
+version: '{build}'
+test_script:
+  - node --version
+  - npm --version
+  - npm run test-only
