@@ -16,7 +16,6 @@ class IgnoreFileFilter extends IgnoreFilter {
     const ignorePath = this.getIgnorePath();
     if (ignorePath) {
       debug(`Adding ${ignorePath}`);
-      // Why?
       this.baseDir = path.dirname(path.resolve(this.baseDir, ignorePath));
       debug(`Set baseDir to ${this.baseDir}`);
       this.addIgnoreFile(ignorePath);

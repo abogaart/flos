@@ -18,6 +18,8 @@ class Filter {
   constructor(options) {
     this.options = Object.assign({}, DEFAULT_OPTIONS, options);
     this.filtered = {}; // track filtered files
+
+    this.setBaseDir(this.options.cwd);
   }
 
   /**
@@ -39,7 +41,7 @@ class Filter {
       throw new Error('Expected filePath argument of type string');
     }
 
-    const base = path.resolve(this.options.cwd);
+    const base = this.getBaseDir();
     const absolutePath = pathUtil.toAbsolute(filePath.trim(), base);
     const relativePath = pathUtil.toRelative(absolutePath, base);
     console.log('Base', base);
@@ -53,11 +55,15 @@ class Filter {
     return isFiltered;
   }
 
+  setBaseDir(baseDir) {
+    this.baseDir = path.resolve(baseDir);
+  }
+
   /**
    * @returns the base dir for this filter, defaults to process.cwd()
    */
   getBaseDir() {
-    return this.options.cwd;
+    return this.baseDir;
   }
 
   track(absolutePath, relativePath) {
