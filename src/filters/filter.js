@@ -40,7 +40,7 @@ class Filter {
     }
 
     const base = path.resolve(this.options.cwd);
-    const absolutePath = path.resolve(base, filePath.trim());
+    const absolutePath = pathUtil.toAbsolute(filePath.trim(), base);
     const relativePath = pathUtil.toRelative(absolutePath, base);
     console.log('Base', base);
     console.log('Absolute', absolutePath);
