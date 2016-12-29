@@ -9,15 +9,15 @@ test('Has a name', t => {
 });
 
 test('Options can be extended by global options', t => {
-  const linter = new FlosLinter('test-name', { a: 'a' });
-  linter.configure({ b: 'b' });
-  t.deepEqual(linter.options, { a: 'a', b: 'b', include: [], exclude: [] });
+  const linter = new FlosLinter('test-name', {a: 'a'});
+  linter.configure({b: 'b'});
+  t.deepEqual(linter.options, {a: 'a', b: 'b', include: [], exclude: []});
 });
 
 test('Options are not overriden by global options', t => {
-  const linter = new FlosLinter('test-name', { a: 'a' });
-  linter.configure({ a: 'b' });
-  t.deepEqual(linter.options, { a: 'a', include: [], exclude: []});
+  const linter = new FlosLinter('test-name', {a: 'a'});
+  linter.configure({a: 'b'});
+  t.deepEqual(linter.options, {a: 'a', include: [], exclude: []});
 });
 
 test('Has default options', t => {
@@ -56,22 +56,25 @@ test('Has errors and warnings', t => {
   t.true(linter.hasWarnings());
 });
 
-test('Should resolve a promise with a reference to itself on a succesful lint operation', t => {
+test('Should resolve a promise with a reference to itself on a succesful lint operation', async t => {
   const linter = new FlosLinter('test-name');
-  return linter.lint().then(result => t.is(result, linter));
+  t.is(await linter.lint(), linter);
 });
 
-test('Create a new resolver when starting a lint operation', t => {
+test('Create a new resolver when starting a lint operation', async t => {
   const linter = new FlosLinter('test-name');
   const spy = sinon.spy(linter, 'createResolver');
-  return linter.lint().then(() => t.true(spy.calledOnce));
+
+  await linter.lint();
+  t.true(spy.calledOnce);
 });
 
-test('Reuses resolver if it already exists', t => {
+test('Reuses resolver if it already exists', async t => {
   const linter = new FlosLinter('test-name');
   const spy = sinon.spy(linter, 'createResolver');
-  return linter.lint().then(() => {
-    return linter.lint().then(() => t.true(spy.calledOnce));
-  });
+
+  await linter.lint();
+  await linter.lint();
+  t.true(spy.calledOnce);
 });
 

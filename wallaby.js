@@ -6,11 +6,11 @@ module.exports = function (wallaby) {
     name: 'Flos',
     files: [
       'src/**/*.js',
-      'test/fixtures/**/{*,.*}',
+      'test/fixtures/**/{*,.*}'
     ],
 
     tests: [
-      'test/**/*.test.js',
+      'test/**/*.test.js'
     ],
 
     env: {
@@ -18,7 +18,7 @@ module.exports = function (wallaby) {
     },
 
     compilers: {
-      '**/*.js': wallaby.compilers.babel(),
+      '**/*.js': wallaby.compilers.babel()
     },
 
     testFramework: 'ava',

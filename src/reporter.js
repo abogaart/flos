@@ -32,6 +32,7 @@ class FlosReporter {
     this.print(this.formatter.formatException(error));
     this.print('Flos finished with error(s)');
     if (process.env.NODE_ENV !== 'test') {
+      // eslint-disable-next-line unicorn/no-process-exit
       process.exit(1);
     }
   }

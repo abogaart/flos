@@ -12,7 +12,7 @@ test.beforeEach(() => {
     warning: sinon.spy(),
     fatal: sinon.spy(),
     exception: sinon.spy(),
-    finish: sinon.spy(),
+    finish: sinon.spy()
   };
   processor = new FlosProcessor();
 });
@@ -39,14 +39,14 @@ test('Finishes with errors and warnings', t => {
 });
 
 test('Detects fatal linters', t => {
-  const linterA = new FlosLinter('a', { failEarly: true, failOnError: true });
+  const linterA = new FlosLinter('a', {failEarly: true, failOnError: true});
   linterA.errors = ['error1'];
   processor.process([linterA], reporter);
   t.true(reporter.fatal.calledOnce);
   t.true(reporter.fatal.calledWith([linterA], []));
 
   reporter.fatal.reset();
-  const linterB = new FlosLinter('b', { failEarly: true, failOnWarning: true });
+  const linterB = new FlosLinter('b', {failEarly: true, failOnWarning: true});
   linterB.warnings = ['warning1'];
   processor.process([linterB], reporter);
   t.true(reporter.fatal.calledOnce);

@@ -3,7 +3,7 @@ import path from 'path';
 import shell from 'shelljs';
 import IgnoreFilter from './ignore.filter';
 
-const debug = require("debug")("flos:ignore");
+const debug = require('debug')('flos:ignore');
 
 class IgnoreFileFilter extends IgnoreFilter {
   /**
@@ -42,16 +42,16 @@ class IgnoreFileFilter extends IgnoreFilter {
       try {
         fs.statSync(ignoreFile);
         ignorePath = ignoreFile;
-      } catch (e) {
-        e.message = `Cannot read ignore file: ${ignoreFile}\nError: ${e.message}`;
-        throw e;
+      } catch (err) {
+        err.message = `Cannot read ignore file: ${ignoreFile}\nError: ${err.message}`;
+        throw err;
       }
     } else {
       ignorePath = this.findIgnoreFile();
       try {
         fs.statSync(ignorePath);
         debug(`Loaded ignore file ${ignorePath}`);
-      } catch (e) {
+      } catch (err) {
         debug('Could not find ignore file in baseDir');
       }
     }

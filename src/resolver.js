@@ -1,11 +1,10 @@
-import Debug from 'debug';
 import globby from 'globby';
 import pathUtil from 'path-util';
 
 import IgnoreFilter from './filters/ignore.filter';
-import { asArray } from './util';
+import {asArray, nonEmptyArray} from './util';
 
-const debug = Debug('flos:resolver');
+const debug = require('debug')('flos:resolver');
 
 /**
  * Adds `"*"` at the end of `"node_modules/"`,
@@ -27,7 +26,7 @@ const DEFAULT_OPTS = {
   ignore: true,
   noDir: true,
   ignoreDefault: DEFAULT_IGNORE_DIRS,
-  excludeDefault: DEFAULT_EXCLUDE_DIRS,
+  excludeDefault: DEFAULT_EXCLUDE_DIRS
 };
 
 /**
@@ -53,13 +52,13 @@ class Resolver {
   constructor(options) {
     const opts = Object.assign({}, DEFAULT_OPTS, options);
 
-    this.filters =  opts.filters || [];
+    this.filters = opts.filters || [];
     this.include = asArray(opts.include).map(glob => pathUtil.canonicalize(glob));
     this.exclude = asArray(opts.exclude).map(glob => pathUtil.canonicalize(glob));
 
     opts.dotFiles = opts.dotFiles || this.globIncludesDotfiles(this.include);
 
-    if (opts.excludeDefault && opts.excludeDefault.length) {
+    if (nonEmptyArray(opts.excludeDefault)) {
       this.exclude.push(...opts.excludeDefault);
     }
 
@@ -80,7 +79,6 @@ class Resolver {
           dotfiles: opts.dotFiles
         }));
       }
-      // TODO: handle ignore file, do lookup by default
     }
 
     this.options = opts;

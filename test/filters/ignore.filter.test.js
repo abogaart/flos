@@ -7,7 +7,3 @@ test('Ignores dot-files by default', t => {
   const filtered = filter.apply('.flosrc');
   t.true(filtered);
 });
-
-
-
-

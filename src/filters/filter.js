@@ -1,11 +1,11 @@
 import path from 'path';
 import pathUtil from 'path-util';
 
-const debug = require("debug")("flos:filter");
+const debug = require('debug')('flos:filter');
 
 const DEFAULT_OPTIONS = {
   cwd: process.cwd(),
-  trackFiltered : true
+  trackFiltered: true
 };
 
 class Filter {
@@ -62,7 +62,7 @@ class Filter {
   }
 
   tracking(absolutePath) {
-    return !!this.filtered[absolutePath];
+    return Boolean(this.filtered[absolutePath]);
   }
 }
 
