@@ -1,4 +1,5 @@
 import path from 'path';
+import pathUtil from 'path-util';
 import test from 'ava';
 import sinon from 'sinon';
 import Filter from '../../src/filters/filter';
@@ -8,7 +9,7 @@ const root = path.resolve('/');
 const base = path.resolve('/base');
 
 const relPathToFile = 'path/to/file.js';
-const absPathToFile = path.resolve('/path/to/file.js');
+const absPathToFile = pathUtil.toAbsolute('path/to/file.js', root);
 
 // basedir configuration
 test('process.cwd() is the default baseDir', t => {
@@ -53,12 +54,12 @@ test('calls filter with an absolute path, and a path relative to the baseDir', t
 
   filter.apply('file.js');
   t.true(spy.calledOnce);
-  t.true(spy.calledWithExactly(path.join(base, 'file.js'), 'file.js'));
+  t.true(spy.calledWithExactly(pathUtil.toAbsolute('file.js', base), 'file.js'));
   spy.reset();
 
   filter.apply('path/to/file.js');
   t.true(spy.calledOnce);
-  t.true(spy.calledWithExactly(path.join(base, relPathToFile), relPathToFile));
+  t.true(spy.calledWithExactly(pathUtil.toAbsolute(relPathToFile, base), relPathToFile));
   spy.reset();
 
   // outside of baseDir
