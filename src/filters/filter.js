@@ -44,10 +44,12 @@ class Filter {
     const path = filePath.trim();
     const base = this.getBaseDir();
     const absolutePath = pathUtil.isAbsolute(path) ? path : pathUtil.toAbsolute(path, base);
-    const relativePath = pathUtil.toRelative(absolutePath, base);
-    console.log('Base', base);
-    console.log('Absolute', absolutePath);
-    console.log('Relative', relativePath);
+    let relativePath;
+    if (pathUtil.isBasePath(base, absolutePath)) {
+      relativePath = pathUtil.toRelative(absolutePath, base);
+    } else {
+      relativePath = pathUtil.toRelative(pathUtil.getRoot(base), base) + absolutePath;
+    }
     const isFiltered = this.filter(absolutePath, relativePath);
 
     if (isFiltered && this.options.trackFiltered) {
@@ -57,7 +59,7 @@ class Filter {
   }
 
   setBaseDir(baseDir) {
-    this.baseDir = path.resolve(baseDir);
+    this.baseDir = pathUtil.canonicalize(path.resolve(baseDir));
   }
 
   /**

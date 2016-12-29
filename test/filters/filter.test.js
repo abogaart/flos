@@ -6,10 +6,12 @@ import Filter from '../../src/filters/filter';
 
 const cwd = process.cwd();
 const root = path.resolve('/');
-const base = path.resolve('/base');
+const base = path.resolve('/root/base');
 
+const relFile = 'file.js';
+const absFile = pathUtil.toAbsolute(relFile, root);
 const relPathToFile = 'path/to/file.js';
-const absPathToFile = pathUtil.toAbsolute('path/to/file.js', root);
+const absPathToFile = pathUtil.toAbsolute(relPathToFile, root);
 
 // basedir configuration
 test('process.cwd() is the default baseDir', t => {
@@ -62,14 +64,44 @@ test('calls filter with an absolute path, and a path relative to the baseDir', t
   t.true(spy.calledWithExactly(pathUtil.toAbsolute(relPathToFile, base), relPathToFile));
   spy.reset();
 
-  // outside of baseDir
+  filter.apply('/root/base/path/to/file.js');
+  t.true(spy.calledOnce);
+  t.true(spy.calledWithExactly(pathUtil.toAbsolute(relPathToFile, base), relPathToFile));
+});
+
+test('handles baseDir == root correctly', t => {
+  const filter = new Filter({cwd: root});
+  const spy = sinon.spy(filter, 'filter');
+
+  filter.apply('file.js');
+  t.true(spy.calledWithExactly(absFile, relFile));
+  spy.reset();
+
   filter.apply('/file.js');
-  t.true(spy.calledWithExactly(pathUtil.toAbsolute('file.js', root), '../file.js'));
+  t.true(spy.calledWithExactly(absFile, relFile));
+  spy.reset();
+
+  filter.apply('path/to/file.js');
+  t.true(spy.calledWithExactly(absPathToFile, relPathToFile));
+  spy.reset();
+
+  filter.apply('/path/to/file.js');
+  t.true(spy.calledWithExactly(absPathToFile, relPathToFile));
+  spy.reset();
+});
+
+test('handles path outside of baseDir correctly', t => {
+  const filter = new Filter({cwd: base});
+  const spy = sinon.spy(filter, 'filter');
+
+  filter.apply('/file.js');
+  t.true(spy.calledOnce);
+  t.true(spy.calledWithExactly(absFile, '../../file.js'));
   spy.reset();
 
   filter.apply('/path/to/file.js');
   t.true(spy.calledOnce);
-  t.true(spy.calledWithExactly(absPathToFile, '../path/to/file.js'));
+  t.true(spy.calledWithExactly(absPathToFile, '../../path/to/file.js'));
   spy.reset();
 });
 
