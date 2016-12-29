@@ -41,8 +41,9 @@ class Filter {
       throw new Error('Expected filePath argument of type string');
     }
 
+    const path = filePath.trim();
     const base = this.getBaseDir();
-    const absolutePath = pathUtil.toAbsolute(filePath.trim(), base);
+    const absolutePath = pathUtil.isAbsolute(path) ? path : pathUtil.toAbsolute(path, base);
     const relativePath = pathUtil.toRelative(absolutePath, base);
     console.log('Base', base);
     console.log('Absolute', absolutePath);
