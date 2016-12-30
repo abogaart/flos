@@ -66,7 +66,6 @@ test('calls filter with an absolute path, and a path relative to the baseDir', t
 
   filter.apply('/root/base/path/to/file.js');
   t.true(spy.calledOnce);
-  console.log('YIDAMAN0', spy.args);
   t.true(spy.calledWithExactly(pathUtil.toAbsolute(relPathToFile, base), relPathToFile));
 });
 
@@ -79,7 +78,6 @@ test('handles baseDir == root correctly', t => {
   spy.reset();
 
   filter.apply('/file.js');
-  console.log('YIDAMAN1', spy.args);
   t.true(spy.calledWithExactly(absFile, relFile));
   spy.reset();
 
@@ -97,7 +95,6 @@ test('handles path outside of baseDir correctly', t => {
   const spy = sinon.spy(filter, 'filter');
 
   filter.apply('/file.js');
-  console.log('YIDAMAN2', spy.args);
   t.true(spy.calledOnce);
   t.true(spy.calledWithExactly(absFile, '../../file.js'));
   spy.reset();
