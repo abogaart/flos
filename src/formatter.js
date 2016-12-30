@@ -1,5 +1,7 @@
 import chalk from 'chalk';
 
+import {nonEmptyArray} from './util';
+
 class FlosFormatter {
 
   formatErrors(linter) {
@@ -29,11 +31,11 @@ class FlosFormatter {
   formatFatals(fatalErrors, fatalWarnings) {
     const fatals = [];
 
-    if (fatalErrors.length) {
+    if (nonEmptyArray(fatalErrors)) {
       fatals.push(this.formatFatal(fatalErrors, 'error', 'errors'));
     }
 
-    if (fatalWarnings.length) {
+    if (nonEmptyArray(fatalWarnings)) {
       fatals.push(this.formatFatal(fatalWarnings, 'warning', 'warnings', chalk.yellow));
     }
 

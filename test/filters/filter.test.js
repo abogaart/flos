@@ -1,22 +1,39 @@
+import path from 'path';
+import pathUtil from 'path-util';
 import test from 'ava';
 import sinon from 'sinon';
 import Filter from '../../src/filters/filter';
 
+const cwd = pathUtil.canonicalize(process.cwd());
+const root = path.resolve('/');
+const base = path.resolve('/root/base');
+
+const relFile = 'file.js';
+const absFile = pathUtil.toAbsolute(relFile, root);
+const relPathToFile = 'path/to/file.js';
+const absPathToFile = pathUtil.toAbsolute(relPathToFile, root);
+
 // basedir configuration
 test('process.cwd() is the default baseDir', t => {
   const filter = new Filter();
-  t.is(filter.getBaseDir(), process.cwd());
+  t.is(filter.getBaseDir(), cwd);
 });
 
-test('the value of baseDir is configurable', t => {
-  const filter = new Filter({cwd: 'testcwd'});
-  t.is(filter.getBaseDir(), 'testcwd');
+test('has a configurable basedir', t => {
+  const baseDir = pathUtil.toAbsolute('testcwd', cwd);
+  const filter = new Filter({cwd: baseDir});
+  t.is(filter.getBaseDir(), baseDir);
+});
+
+test('resolves a basedir with a relative path to an abslute path, relative to process.cwd()', t => {
+  const relativePath = new Filter({cwd: 'testcwd'});
+  t.is(relativePath.getBaseDir(), pathUtil.toAbsolute('testcwd', cwd));
 });
 
 // default behavior
 test('ignores files by default', t => {
   const filter = new Filter();
-  t.false(filter.apply('path/to/file.js'));
+  t.false(filter.apply(relPathToFile));
 });
 
 test('throws exception when apply is called with an empty path', t => {
@@ -34,80 +51,89 @@ test('throws exception when apply is called with an empty path', t => {
 
 // filter calling
 test('calls filter with an absolute path, and a path relative to the baseDir', t => {
-  const filter = new Filter({ cwd: '/' });
+  const filter = new Filter({cwd: base});
   const spy = sinon.spy(filter, 'filter');
 
   filter.apply('file.js');
   t.true(spy.calledOnce);
-  t.true(spy.calledWithExactly('/file.js', 'file.js'));
+  t.true(spy.calledWithExactly(pathUtil.toAbsolute('file.js', base), 'file.js'));
   spy.reset();
 
   filter.apply('path/to/file.js');
   t.true(spy.calledOnce);
-  t.true(spy.calledWithExactly('/path/to/file.js', 'path/to/file.js'));
+  t.true(spy.calledWithExactly(pathUtil.toAbsolute(relPathToFile, base), relPathToFile));
+  spy.reset();
+
+  filter.apply('/root/base/path/to/file.js');
+  t.true(spy.calledOnce);
+  t.true(spy.calledWithExactly(pathUtil.toAbsolute(relPathToFile, base), relPathToFile));
+});
+
+test('handles baseDir == root correctly', t => {
+  const filter = new Filter({cwd: root});
+  const spy = sinon.spy(filter, 'filter');
+
+  filter.apply('file.js');
+  t.true(spy.calledWithExactly(absFile, relFile));
+  spy.reset();
+
+  filter.apply('/file.js');
+  t.true(spy.calledWithExactly(absFile, relFile));
+  spy.reset();
+
+  filter.apply('path/to/file.js');
+  t.true(spy.calledWithExactly(absPathToFile, relPathToFile));
+  spy.reset();
+
+  filter.apply('/path/to/file.js');
+  t.true(spy.calledWithExactly(absPathToFile, relPathToFile));
+  spy.reset();
+});
+
+test('handles path outside of baseDir correctly', t => {
+  const filter = new Filter({cwd: base});
+  const spy = sinon.spy(filter, 'filter');
+
+  filter.apply('/file.js');
+  t.true(spy.calledOnce);
+  t.true(spy.calledWithExactly(absFile, '../../file.js'));
   spy.reset();
 
   filter.apply('/path/to/file.js');
   t.true(spy.calledOnce);
-  t.true(spy.calledWithExactly('/path/to/file.js', 'path/to/file.js'));
-  spy.reset();
-});
-
-test('handles baseDir correctly when calling filter', t => {
-  const filter = new Filter({ cwd: '/root' });
-  const spy = sinon.spy(filter, 'filter');
-
-  filter.apply('file.js');
-  t.true(spy.calledWithExactly('/root/file.js', 'file.js'));
-  spy.reset();
-
-  filter.apply('/root/file.js');
-  t.true(spy.calledWithExactly('/root/file.js', 'file.js'));
-  spy.reset();
-
-  filter.apply('path/file.js');
-  t.true(spy.calledWithExactly('/root/path/file.js', 'path/file.js'));
-  spy.reset();
-
-  filter.apply('/root/path/file.js');
-  t.true(spy.calledWithExactly('/root/path/file.js', 'path/file.js'));
-  spy.reset();
-
-  // outside of baseDir
-  filter.apply('/file.js');
-  t.true(spy.calledWithExactly('/file.js', '../file.js'));
+  t.true(spy.calledWithExactly(absPathToFile, '../../path/to/file.js'));
   spy.reset();
 });
 
 // file tracking
 test('tracks filtered files by default', t => {
-  const filter = new Filter({ cwd: '/' });
+  const filter = new Filter({cwd: root});
   sinon.stub(filter, 'filter').returns(true);
 
-  filter.apply('path/to/files.js');
-  t.true(filter.tracking('/path/to/files.js'));
+  filter.apply(relPathToFile);
+  t.true(filter.tracking(absPathToFile));
 });
 
 test('tracks only filtered files', t => {
-  const filter = new Filter({ cwd: '/' });
+  const filter = new Filter({cwd: root});
   sinon.stub(filter, 'filter')
-    .withArgs('/path/to/files.js', 'path/to/files.js')
+    .withArgs(absPathToFile, relPathToFile)
     .returns(true);
 
-  filter.apply('path/to/files.js');
+  filter.apply(relPathToFile);
   filter.apply('path/to/files2.js');
 
-  t.true(filter.tracking('/path/to/files.js'));
-  t.false(filter.tracking('/path/to/files2.js'));
+  t.true(filter.tracking(absPathToFile));
+  t.false(filter.tracking(path.resolve('/path/to/files2.js')));
 });
 
 test('does not track filtered files when options.trackFiltered is false', t => {
-  const filter = new Filter({ cwd: '/', trackFiltered: false });
+  const filter = new Filter({cwd: root, trackFiltered: false});
   sinon.stub(filter, 'filter').returns(true);
 
-  filter.apply('path/to/files.js');
-  t.false(filter.tracking('/path/to/files.js'));
+  filter.apply(relPathToFile);
+  t.false(filter.tracking(absPathToFile));
 
   filter.apply('path/to/files2.js');
-  t.false(filter.tracking('/path/to/files2.js'));
+  t.false(filter.tracking(absPathToFile));
 });

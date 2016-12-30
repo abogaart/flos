@@ -7,11 +7,11 @@ let formatter;
 let reporter;
 let sandbox;
 
-test.beforeEach(function() {
+test.beforeEach(() => {
   sandbox = sinon.sandbox.create();
 });
 
-test.afterEach(function() {
+test.afterEach(() => {
   sandbox.restore();
 });
 
@@ -39,13 +39,13 @@ test('Prints to the console', t => {
 });
 
 test('Prints errors and warnings early', t => {
-  const linter = new FlosLinter('a', { printEarly: true });
-  linter.errors = [ 'a', 'b' ];
+  const linter = new FlosLinter('a', {printEarly: true});
+  linter.errors = ['a', 'b'];
   reporter.error(linter);
   t.is(reporter.print.callCount, 1);
   t.is(formatter.formatErrors.callCount, 1);
 
-  linter.warnings = [ 'c', 'd' ];
+  linter.warnings = ['c', 'd'];
   reporter.warning(linter);
   t.is(reporter.print.callCount, 2);
   t.is(formatter.formatWarnings.callCount, 1);
@@ -53,8 +53,8 @@ test('Prints errors and warnings early', t => {
 
 test('Stores errors and warnings if not early, and prints them on finish', t => {
   const linter = new FlosLinter('a');
-  linter.errors = [ 'a', 'b' ];
-  linter.warnings = [ 'c' ];
+  linter.errors = ['a', 'b'];
+  linter.warnings = ['c'];
   reporter.error(linter);
   reporter.warning(linter);
   t.is(reporter.errors.length, 2);
@@ -62,7 +62,7 @@ test('Stores errors and warnings if not early, and prints them on finish', t => 
   t.is(reporter.warnings.length, 1);
   t.is(formatter.formatWarning.callCount, 0);
 
-  linter.errors = [ 'c' ];
+  linter.errors = ['c'];
   reporter.error(linter);
   t.is(reporter.errors.length, 3);
   t.is(formatter.formatError.callCount, 0);
@@ -77,11 +77,11 @@ test('Stores errors and warnings if not early, and prints them on finish', t => 
 
 test('Throws on fatal', t => {
   const linter = new FlosLinter('a');
-  linter.errors = [ 'a', 'b' ];
-  linter.warnings = [ 'c' ];
+  linter.errors = ['a', 'b'];
+  linter.warnings = ['c'];
 
   t.throws(() => {
-    reporter.fatal([ linter ], []);
+    reporter.fatal([linter], []);
   }, Error);
 
   t.true(formatter.formatFatals.calledOnce);

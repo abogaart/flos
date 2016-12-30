@@ -3,7 +3,7 @@ import path from 'path';
 import shell from 'shelljs';
 import IgnoreFilter from './ignore.filter';
 
-const debug = require("debug")("flos:ignore");
+const debug = require('debug')('flos:ignore');
 
 class IgnoreFileFilter extends IgnoreFilter {
   /**
@@ -16,7 +16,6 @@ class IgnoreFileFilter extends IgnoreFilter {
     const ignorePath = this.getIgnorePath();
     if (ignorePath) {
       debug(`Adding ${ignorePath}`);
-      // Why?
       this.baseDir = path.dirname(path.resolve(this.baseDir, ignorePath));
       debug(`Set baseDir to ${this.baseDir}`);
       this.addIgnoreFile(ignorePath);
@@ -42,16 +41,16 @@ class IgnoreFileFilter extends IgnoreFilter {
       try {
         fs.statSync(ignoreFile);
         ignorePath = ignoreFile;
-      } catch (e) {
-        e.message = `Cannot read ignore file: ${ignoreFile}\nError: ${e.message}`;
-        throw e;
+      } catch (err) {
+        err.message = `Cannot read ignore file: ${ignoreFile}\nError: ${err.message}`;
+        throw err;
       }
     } else {
       ignorePath = this.findIgnoreFile();
       try {
         fs.statSync(ignorePath);
         debug(`Loaded ignore file ${ignorePath}`);
-      } catch (e) {
+      } catch (err) {
         debug('Could not find ignore file in baseDir');
       }
     }
@@ -63,7 +62,7 @@ class IgnoreFileFilter extends IgnoreFilter {
    * @returns {string} Path of ignore file or an empty string.
    */
   findIgnoreFile() {
-    const ignoreFilePath = path.resolve(this.options.cwd, this.options.ignoreFileName || '');
+    const ignoreFilePath = path.resolve(this.getBaseDir(), this.options.ignoreFileName || '');
     debug(`Looking for ignore file with path ${ignoreFilePath}`);
     return shell.test('-f', ignoreFilePath) ? ignoreFilePath : '';
   }

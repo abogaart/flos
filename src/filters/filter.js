@@ -1,11 +1,11 @@
 import path from 'path';
 import pathUtil from 'path-util';
 
-const debug = require("debug")("flos:filter");
+const debug = require('debug')('flos:filter');
 
 const DEFAULT_OPTIONS = {
   cwd: process.cwd(),
-  trackFiltered : true
+  trackFiltered: true
 };
 
 class Filter {
@@ -18,6 +18,8 @@ class Filter {
   constructor(options) {
     this.options = Object.assign({}, DEFAULT_OPTIONS, options);
     this.filtered = {}; // track filtered files
+
+    this.setBaseDir(this.options.cwd);
   }
 
   /**
@@ -39,21 +41,28 @@ class Filter {
       throw new Error('Expected filePath argument of type string');
     }
 
-    const absolutePath = path.resolve(this.getBaseDir(), filePath.trim());
-    const relativePath = pathUtil.toRelative(absolutePath, this.options.cwd);
-    const isFiltered = this.filter(absolutePath, relativePath);
+    const base = this.getBaseDir();
+    const absPath = pathUtil.isAbsolute(filePath) ?
+          pathUtil.canonicalize(path.resolve(filePath)) : pathUtil.toAbsolute(filePath, base);
+    const relPath = pathUtil.isBasePath(base, absPath) ?
+          pathUtil.toRelative(absPath, base) : pathUtil.toRelative(pathUtil.getRoot(base), base) + absPath.substring(absPath.indexOf('/'));
+    const isFiltered = this.filter(absPath, relPath);
 
     if (isFiltered && this.options.trackFiltered) {
-      this.track(absolutePath, relativePath);
+      this.track(absPath, relPath);
     }
     return isFiltered;
+  }
+
+  setBaseDir(baseDir) {
+    this.baseDir = pathUtil.canonicalize(path.resolve(baseDir));
   }
 
   /**
    * @returns the base dir for this filter, defaults to process.cwd()
    */
   getBaseDir() {
-    return this.options.cwd;
+    return this.baseDir;
   }
 
   track(absolutePath, relativePath) {
@@ -62,7 +71,7 @@ class Filter {
   }
 
   tracking(absolutePath) {
-    return !!this.filtered[absolutePath];
+    return Boolean(this.filtered[absolutePath]);
   }
 }
 

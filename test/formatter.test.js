@@ -10,32 +10,32 @@ test.beforeEach(() => {
 
 test('Formats errors', t => {
   const linterA = new FlosLinter('a');
-  linterA.errors = [ 'err1', 'err2' ];
+  linterA.errors = ['err1', 'err2'];
   const errMsg = formatter.formatErrors(linterA);
   t.is(errMsg, 'Errors from a\nerr1\nerr2');
 });
 
 test('Formats warnings', t => {
   const linterB = new FlosLinter('b');
-  linterB.warnings = [ 'warn1', 'warn2' ];
+  linterB.warnings = ['warn1', 'warn2'];
   const warnMsg = formatter.formatWarnings(linterB);
   t.is(warnMsg, 'Warnings from b\nwarn1\nwarn2');
 });
 
 test('Formats fatals', t => {
   const err1 = new FlosLinter('e1');
-  err1.errors = [ 'err1' ];
+  err1.errors = ['err1'];
   const err2 = new FlosLinter('e2');
-  err2.errors = [ 'err2', 'err3' ];
+  err2.errors = ['err2', 'err3'];
   const err3 = new FlosLinter('e3');
-  err3.errors = [ 'err4' ];
+  err3.errors = ['err4'];
 
   const warn1 = new FlosLinter('w1');
-  warn1.warnings = [ 'warn1' ];
+  warn1.warnings = ['warn1'];
   const warn2 = new FlosLinter('w2');
-  warn2.warnings = [ 'warn2', 'warn3' ];
+  warn2.warnings = ['warn2', 'warn3'];
   const warn3 = new FlosLinter('w3');
-  warn3.warnings = [ 'warn4' ];
+  warn3.warnings = ['warn4'];
 
   let fatalMsg = formatter.formatFatals([], []);
   t.is(fatalMsg, 'Linting failed');
@@ -71,14 +71,13 @@ test('Formats fatals', t => {
 
 test('Formats exception', t => {
   const linterA = new FlosLinter('a');
-  linterA.errors = [ 'err1', 'err2' ];
+  linterA.errors = ['err1', 'err2'];
   const linterB = new FlosLinter('b');
-  linterB.warnings = [ 'warn1' ];
+  linterB.warnings = ['warn1'];
 
   const error1 = 'error1';
-  const error2 = { stack: 'error2'};
+  const error2 = {stack: 'error2'};
   t.is(formatter.formatException(error1), 'error1');
   t.is(formatter.formatException(error2), 'error2');
 });
-
 

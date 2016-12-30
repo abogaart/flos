@@ -19,13 +19,13 @@ class FlosRunner {
     this.linters.forEach(linter => linter.configure(opts));
   }
 
-  run (processor = new FlosProcessor(), reporter = new FlosReporter()) {
+  run(processor = new FlosProcessor(), reporter = new FlosReporter()) {
     return Promise
       .all(this._lintPromises())
       .then(linters => processor.process(linters, reporter))
-      .catch(error => {
-        reporter.exception(error);
-        return error;
+      .catch(err => {
+        reporter.exception(err);
+        return err;
       });
   }
 
@@ -33,8 +33,8 @@ class FlosRunner {
     return this.linters.map(linter => {
       try {
         return Promise.resolve(linter.lint() || linter);
-      } catch (e) {
-        return Promise.reject(e);
+      } catch (err) {
+        return Promise.reject(err);
       }
     });
   }

@@ -1,9 +1,11 @@
+/* eslint-disable import/default */
+
 import test from 'ava';
 import sinon from 'sinon';
 
-import fixtures from './fixtures/index';
 import Resolver from '../src/resolver';
 import Filter from '../src/filters/filter';
+import fixtures from './fixtures/index';
 
 const ALL_JS = '**/*.js';
 
@@ -19,11 +21,11 @@ test.after.always(() => {
 function resolver(opts) {
   return new Resolver(Object.assign({}, {
     include: [ALL_JS],
-    cwd: fixture(),
+    cwd: fixture()
   }, opts));
 }
 
-function files(opts) {
+function getFiles(opts) {
   return resolver(opts).getFiles();
 }
 
@@ -41,120 +43,118 @@ function equals(t, value, ...expected) {
 }
 
 // include
-test('Returns zero files if no config is set', t => {
-  return new Resolver()
-  .getFiles()
-  .then(files => t.deepEqual(files, []));
+test('Returns zero files if no config is set', async t => {
+  const files = await new Resolver().getFiles();
+  t.deepEqual(files, []);
 });
 
-test('Returns zero files if include pattern not set', t => {
-  return new Resolver({ include: false })
-  .getFiles()
-  .then(files => t.deepEqual(files, []));
+test('Returns zero files if include pattern not set', async t => {
+  const files = await new Resolver({include: false}).getFiles();
+  t.deepEqual(files, []);
 });
 
-test('Returns files from single include pattern', t => {
-  return files()
-  .then(files => equals(t, files, 'file1.js', 'src/src1.js', 'src/folder1/src2.js'));
+test('Returns files from single include pattern', async t => {
+  const files = await getFiles();
+  equals(t, files, 'file1.js', 'src/src1.js', 'src/folder1/src2.js');
 });
 
-test('Returns files from multiple include patterns', t => {
-  return files({ include: ['**/src1.js', '**/src2.js']})
-  .then(files => equals(t, files, 'src/src1.js', 'src/folder1/src2.js'));
+test('Returns files from multiple include patterns', async t => {
+  const files = await getFiles({include: ['**/src1.js', '**/src2.js']});
+  equals(t, files, 'src/src1.js', 'src/folder1/src2.js');
 });
 
-test('Includes node_modules and bower_components when excludeDefault and ignoreDefault are false', t => {
-  return files({
+test('Includes node_modules et al when excludeDefault and ignoreDefault are false', async t => {
+  const files = await getFiles({
     excludeDefault: false,
-    ignoreDefault: false,
-  })
-  .then(files => contains(t, files, 'bower_components/mod1/mod1.js', 'node_modules/mod1/mod1.js'));
+    ignoreDefault: false
+  });
+  contains(t, files, 'bower_components/mod1/mod1.js', 'node_modules/mod1/mod1.js');
 });
 
-test('Includes node_modules and bower_components in glob if excludeDefault is false', t => {
-  return resolver({
-    excludeDefault: false,
+test('Includes node_modules et al in glob if excludeDefault is false', async t => {
+  const files = await resolver({
+    excludeDefault: false
   })
-  .glob(ALL_JS)
-  .then(files => contains(t, files, 'bower_components/mod1/mod1.js', 'node_modules/mod1/mod1.js'));
+  .glob(ALL_JS);
+
+  contains(t, files, 'bower_components/mod1/mod1.js', 'node_modules/mod1/mod1.js');
 });
 
-test('Includes dot-files when dotFiles is true', t => {
-  return files({
-    dotFiles: true,
-  })
-  .then(files => contains(t, files, '.dotfile1.js'));
+test('Includes dot-files when dotFiles is true', async t => {
+  const files = await getFiles({
+    dotFiles: true
+  });
+  contains(t, files, '.dotfile1.js');
 });
 
-test('Includes dot-files when pattern is dot-pattern', t => {
-  return files({
+test('Includes dot-files when pattern is dot-pattern', async t => {
+  const files = await getFiles({
     include: '.*'
-  })
-  .then(files => contains(t, files, '.dotfile1.js'));
+  });
+  contains(t, files, '.dotfile1.js');
 });
 
 // default excludes and ignores
-test('Excludes node_modules and bower_components by default', t => {
-  return files()
-  .then(files => notContains(t, files, 'bower_components/mod1/mod1.js', 'node_modules/mod1/mod1.js'));
+test('Excludes node_modules et al by default', async t => {
+  const files = await getFiles();
+  notContains(t, files, 'bower_components/mod1/mod1.js', 'node_modules/mod1/mod1.js');
 });
 
-test('Ignores node_modules and bower_components by default', t => {
-  return files({
+test('Ignores node_modules and bower_components by default', async t => {
+  const files = await getFiles({
     excludeDefault: false
-  })
-  .then(files => notContains(t, files, 'bower_components/mod1/mod1.js', 'node_modules/mod1/mod1.js'));
+  });
+  notContains(t, files, 'bower_components/mod1/mod1.js', 'node_modules/mod1/mod1.js');
 });
 
-test('Excludes dot-files by default', t => {
-  return files()
-  .then(files => notContains(t, files, '.dotfile1.js'));
+test('Excludes dot-files by default', async t => {
+  const files = await getFiles();
+  notContains(t, files, '.dotfile1.js');
 });
 
 // exclude
-test('Excludes patterns from glob', t => {
-  return resolver({
-    exclude: ['src/**'],
+test('Excludes patterns from glob', async t => {
+  const files = await resolver({
+    exclude: ['src/**']
   })
-  .glob(ALL_JS)
-  .then(files => equals(t, files, 'file1.js'));
+  .glob(ALL_JS);
+  equals(t, files, 'file1.js');
 });
 
 // ignore
-test('Ignore pattern can be specified', t => {
-  return files({
+test('Ignore pattern can be specified', async t => {
+  const files = await getFiles({
     ignorePatterns: ['folder1/']
-  })
-  .then(files => equals(t, files, 'file1.js', 'src/src1.js'));
+  });
+  equals(t, files, 'file1.js', 'src/src1.js');
 });
 
-test('Multiple ignore patterns can be specified', t => {
-  return files({
+test('Multiple ignore patterns can be specified', async t => {
+  const files = await getFiles({
     ignorePatterns: ['folder1/', 'src1.*']
-  })
-  .then(files => equals(t, files, 'file1.js'));
+  });
+  equals(t, files, 'file1.js');
 });
 
-test('Ignore can be disabled', t => {
-  return files({
+test('Ignore can be disabled', async t => {
+  const files = await getFiles({
     ignorePattern: ['file1.js'],
     ignore: false
-  })
-  .then(files => contains(t, files, 'file1.js'));
+  });
+  contains(t, files, 'file1.js');
 });
 
 // filters
-test('Executes custom filters', t => {
+test('Executes custom filters', async t => {
   const filter = new Filter();
   const stub = sinon.stub(filter, 'apply').returns(true);
-  return files({
+  const files = await getFiles({
     filters: [filter]
-  })
-  .then(files => {
-    t.deepEqual(files, []);
-    t.true(stub.calledThrice);
-    t.true(stub.calledWith('file1.js'));
-    t.true(stub.calledWith('src/src1.js'));
-    t.true(stub.calledWith('src/folder1/src2.js'));
   });
+
+  t.deepEqual(files, []);
+  t.true(stub.calledThrice);
+  t.true(stub.calledWith('file1.js'));
+  t.true(stub.calledWith('src/src1.js'));
+  t.true(stub.calledWith('src/folder1/src2.js'));
 });

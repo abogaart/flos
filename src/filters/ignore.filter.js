@@ -7,10 +7,10 @@ import ignore from 'ignore';
 
 import Filter from './filter';
 
-const debug = require("debug")("flos:ignore");
+const debug = require('debug')('flos:ignore');
 
 const DEFAULT_OPTIONS = {
-  dotfiles: false,
+  dotfiles: false
 };
 
 class IgnoreFilter extends Filter {

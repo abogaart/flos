@@ -1,6 +1,7 @@
-import path from 'path';
-import os from 'os';
 import fs from 'fs';
+import os from 'os';
+import path from 'path';
+import pathUtil from 'path-util';
 import {cp, ln, mkdir, rm, test} from 'shelljs';
 
 const links = path.join(process.cwd(), '/test/links');
@@ -10,6 +11,9 @@ function setup(link, fixture) {
   const dir = path.join(fixtures, fixture);
   const src = path.join(process.cwd(), `test/fixtures/${fixture}`);
 
+  if (test('-e', dir)) {
+    rm('-rf', dir);
+  }
   // create tmp fixture folder
   mkdir('-p', dir);
   // copy fixture contents to tmp folder
@@ -36,7 +40,7 @@ function fixture(name) {
   }
 
   const root = fs.realpathSync(link);
-  return (...paths) => path.join(root, ...paths);
+  return (...paths) => pathUtil.canonicalize(path.join(root, ...paths));
 }
 
 module.exports = {

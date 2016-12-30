@@ -1,10 +1,9 @@
-import Debug from 'debug';
-import pick from 'lodash/pick';
+import pick from 'lodash.pick';
 
 import Resolver from './resolver';
-import { asArray } from './util';
+import {asArray} from './util';
 
-const debug = Debug('flos:linter');
+const debug = require('debug')('flos:linter');
 
 /**
  * The main function of a FlosLinter is linting a list of files, and storing the results.
@@ -29,7 +28,7 @@ class FlosLinter {
    */
   constructor(name, options = {}) {
     this.name = name;
-    this.options = Object.assign({ include: [], exclude:  [] }, options);
+    this.options = Object.assign({include: [], exclude: []}, options);
     this.errors = [];
     this.warnings = [];
 
@@ -57,7 +56,7 @@ class FlosLinter {
         'cwd',
         'dotfiles',
         'include',
-        'ignore',
+        'ignore'
       ]));
       this.resolver = this.createResolver(resolverOptions);
     }
@@ -87,19 +86,19 @@ class FlosLinter {
   }
 
   isPrintEarly() {
-    return !!this.options.printEarly;
+    return Boolean(this.options.printEarly);
   }
 
   isFailEarly() {
-    return !!this.options.failEarly;
+    return Boolean(this.options.failEarly);
   }
 
   isFailOnError() {
-    return !!this.options.failOnError;
+    return Boolean(this.options.failOnError);
   }
 
   isFailOnWarning() {
-    return !!this.options.failOnWarning;
+    return Boolean(this.options.failOnWarning);
   }
 
   hasErrors() {
