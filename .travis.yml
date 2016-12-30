@@ -2,16 +2,19 @@ sudo: false
 language: node_js
 cache: yarn
 node_js:
-  - "7"
-  - "6"
-  - "5"
-  - "4"
+- '7'
+- '6'
+- '5'
+- '4'
 matrix:
   include:
-    - node_js: "lts/*"
-      env: LINT=true
+  - node_js: lts/*
+    env: LINT=true
 script:
-  - 'if [ -n "${LINT-}" ]; then yarn run lint ; fi'
-  - 'if [ -z "${LINT-}" ]; then yarn run test-ci ; fi'
+- if [ -n "${LINT-}" ]; then yarn run lint ; fi
+- if [ -z "${LINT-}" ]; then yarn run test-ci ; fi
 after_success:
-  - yarn run coverage
+- yarn run coverage
+notifications:
+  slack:
+    secure: oDS1hB/dw0jJsHYqSHF6Y/3jjLSe3hi2BwUMpT5fI4dNiGqfKVhUOhjyHZOJZf+6Dsv9OqIFrUgOW3Ki5oYcYmjhTzM/3WXuXYKqF+6KhM+G8f1AUY/elYKA1+QqJtkr/s1oKU7YZJ/heIzgsyH4kruxKCVbRvyQkz8KZhWQFKLEBKkGOOw/8F22JI/VCCEksFytLBSpLZPaj8GYN9UEuJ5C6hV7qa37SosTxufSt2d452npfOeMR9HTLXZqnkBfFPY0MkIm3LvELtJMB6NxLzc9oeylXaBG+aKaCGQexBhTGHcpHqoq84IiXVvFL+F1HEbbxis4qay4hdv2/Qvpn+qNoaWs6G6Wfsqpt1kzo6ik1bWB38BDA26Uo9FxEq+1/RK0N5FHfEBe3QEBo9z8WCH4+lJu/c/yES7N33Ngf/1X1mKG33xa8z2RJaMmFXa4VH8qOqFG7aeHVbN57cr9Bjdkyb/9qkvav3agJQHD9v5wBL9E5+cAoM7TtvTjCEjgFqq0vs/qjMEOyN5JjpztW9BeDdpYhAShTK1yftA1ZarLaWNx/nHLAtmox2Claqakma0qYNAVb69H/yxFnXvnZAHJuq+WEwRZW4r2/kD96T4L6V3D99Jm0r9SmkqpQPO2I2m+EtORQLlI9THc5n+KPsAPd0HFSWj/ztJzG3qcv14=
