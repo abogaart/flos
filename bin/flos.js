@@ -7,22 +7,11 @@ if (process.argv.indexOf('--debug') > -1) {
 }
 
 const flos = require('../lib/api');
-const FlosRunner = flos.Runner;
-const FlosLinter = flos.Linter;
 
 // load config
 const config = {};
 
 // load linters
-const linterA = new FlosLinter('a', {include: ['tmp/**/*.js', 'src/api.js']});
-const linterB = new FlosLinter('b', {include: ['.gitignore']});
-const linterC = new FlosLinter('c', {include: ['**/*.test.js']});
-const linters = [linterA, linterB, linterC];
-// const linters = [linterC];
+const linters = [];
 
-// create runner
-const runner = new FlosRunner(linters);
-// configure runner
-runner.configure(config);
-// flos
-runner.run();
+flos.run(linters, config);
