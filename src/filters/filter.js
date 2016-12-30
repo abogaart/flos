@@ -42,8 +42,8 @@ class Filter {
     }
 
     const base = this.getBaseDir();
-    const path = pathUtil.canonicalize(filePath);
-    const absPath = pathUtil.isAbsolute(path) ? path : pathUtil.toAbsolute(path, base);
+    const file = pathUtil.canonicalize(filePath);
+    const absPath = pathUtil.isAbsolute(file) ? path.resolve(file) : pathUtil.toAbsolute(file, base);
     const relPath = pathUtil.isBasePath(base, absPath) ?
           pathUtil.toRelative(absPath, base) : pathUtil.toRelative(pathUtil.getRoot(base), base) + absPath;
     const isFiltered = this.filter(absPath, relPath);
