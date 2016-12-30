@@ -42,9 +42,10 @@ class Filter {
     }
 
     const base = this.getBaseDir();
-    const absPath = pathUtil.isAbsolute(filePath) ? pathUtil.canonicalize(path.resolve(filePath)) : pathUtil.toAbsolute(filePath, base);
+    const absPath = pathUtil.isAbsolute(filePath) ?
+          pathUtil.canonicalize(path.resolve(filePath)) : pathUtil.toAbsolute(filePath, base);
     const relPath = pathUtil.isBasePath(base, absPath) ?
-          pathUtil.toRelative(absPath, base) : pathUtil.toRelative(pathUtil.getRoot(base), base) + absPath;
+          pathUtil.toRelative(absPath, base) : pathUtil.toRelative(pathUtil.getRoot(base), base) + absPath.substring(absPath.indexOf('/'));
     const isFiltered = this.filter(absPath, relPath);
 
     if (isFiltered && this.options.trackFiltered) {
