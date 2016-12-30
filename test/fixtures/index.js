@@ -11,6 +11,9 @@ function setup(link, fixture) {
   const dir = path.join(fixtures, fixture);
   const src = path.join(process.cwd(), `test/fixtures/${fixture}`);
 
+  if (test('-e', dir)) {
+    rm('-rf', dir);
+  }
   // create tmp fixture folder
   mkdir('-p', dir);
   // copy fixture contents to tmp folder
