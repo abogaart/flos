@@ -5,15 +5,6 @@ import FlosReporter from '../src/reporter';
 
 let formatter;
 let reporter;
-let sandbox;
-
-test.beforeEach(() => {
-  sandbox = sinon.sandbox.create();
-});
-
-test.afterEach(() => {
-  sandbox.restore();
-});
 
 test.beforeEach(() => {
   formatter = {};
@@ -36,6 +27,7 @@ test('Prints to the console', t => {
   new FlosReporter().print('one', 'two');
   t.true(stub.calledOnce);
   t.true(stub.calledWithExactly('one', 'two'));
+  stub.restore();
 });
 
 test('Prints errors and warnings early', t => {
@@ -88,7 +80,11 @@ test('Throws on fatal', t => {
 });
 
 test('Prints an exception', t => {
+  const stub = sinon.stub(process, 'exit');
   reporter.exception(new Error('error 1'));
   t.true(reporter.print.calledTwice);
   t.true(formatter.formatException.calledOnce);
+  t.true(stub.calledOnce);
+  t.true(stub.calledWithExactly(1));
+  stub.restore();
 });
