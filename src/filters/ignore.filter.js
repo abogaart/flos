@@ -16,9 +16,10 @@ const DEFAULT_OPTIONS = {
 class IgnoreFilter extends Filter {
 
   /**
-   * @param {Object} options object containing 'cwd', 'dotfiles',
-   *                 'ignore' and 'ignorePatterns' properties
+   * @param {Object} options Configuration object for IgnoreFilter
    * @param {string} [options.cwd]  CWD (considered for relative filenames)
+   * @param {boolean} [options.dotfiles]  Allow dot files
+   * @param {string} [options.ignorePatterns]  Glob patterns to ignore
    */
   constructor(options) {
     super(Object.assign({}, DEFAULT_OPTIONS, options));
@@ -55,7 +56,6 @@ class IgnoreFilter extends Filter {
   filter(absolutePath, relativePath) {
     return this.ignore.filter([relativePath]).length === 0;
   }
-
 }
 
 export default IgnoreFilter;

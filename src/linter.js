@@ -21,7 +21,7 @@ class FlosLinter {
    * @param {boolean}  [options.failOnError]   Fail on error(s).
    * @param {boolean}  [options.failOnWarning] Fail on warning(s).
    * @param {string}   [options.cwd]           CWD (considered for relative filenames).
-   * @param {string}   [options.dotfiles]           CWD (considered for relative filenames).
+   * @param {string}   [options.dotfiles]      Process dot files
    * @param {boolean}  [options.ignore]        False disables use of the ignore filter.
    * @param {string}   [options.ignorePath]    The ignore file to use.
    * @param {string[]} [options.ignorePatterns] Patterns of files to ignore.

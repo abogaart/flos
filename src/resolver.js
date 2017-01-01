@@ -37,17 +37,17 @@ const DEFAULT_OPTS = {
 class Resolver {
 
   /**
-   * @param   {object}   options                 File resolver options
-   * @param   {string}   [options.cwd]           CWD (considered for relative filenames)
-   * @param   {boolean}  [options.dotFiles]      Resolve hidden files
-   * @param   {boolean}  [options.noDir]         Never return a folder in the result
-   * @param   {string[]} [options.include]       Files/folders to include
-   * @param   {string[]} [options.exclude]       Files/folders to exclude
-   * @param   {string[]} [options.excludeDefault] Default files/folders to exclude
-   * @param   {boolean}  [options.ignore]        Ignore configuration, false disables ignoring files
-   * @param   {boolean}  [options.ignoreDefault]
-   * @param   {string}   [options.ignoreFile]            Path to ignore-file for providing ignore rules
-   * @param   {string}   [options.ignorePatterns]        Glob patterns for ignoring files
+   * @param   {object}   options                        File resolver options
+   * @param   {string}   [options.cwd]                  CWD (considered for relative filenames)
+   * @param   {boolean}  [options.dotfiles]             Resolve hidden files
+   * @param   {boolean}  [options.noDir]                Never return a folder in the result
+   * @param   {string[]} [options.include]              Glob patterns to include
+   * @param   {string[]} [options.exclude]              Glob patterns to exclude
+   * @param   {string[]} [options.excludeDefault]       Default glob patterns to exclude
+   * @param   {boolean}  [options.ignore]               Ignore configuration, false disables ignoring files
+   * @param   {boolean}  [options.ignoreDefault]        Default glob patterns to ignore
+   * @param   {string}   [options.ignoreFile]           Path to ignore-file for providing ignore rules
+   * @param   {string}   [options.ignorePatterns]       Glob patterns for ignoring files
    */
   constructor(options) {
     const opts = Object.assign({}, DEFAULT_OPTS, options);
@@ -56,7 +56,7 @@ class Resolver {
     this.include = asArray(opts.include).map(glob => pathUtil.canonicalize(glob));
     this.exclude = asArray(opts.exclude).map(glob => pathUtil.canonicalize(glob));
 
-    opts.dotFiles = opts.dotFiles || this.globIncludesDotfiles(this.include);
+    opts.dotfiles = opts.dotfiles || this.globIncludesDotfiles(this.include);
 
     if (nonEmptyArray(opts.excludeDefault)) {
       this.exclude.push(...opts.excludeDefault);
@@ -68,7 +68,7 @@ class Resolver {
         this.addFilter(new IgnoreFilter({
           ignorePatterns: opts.ignoreDefault,
           reportFiltered: false,
-          dotfiles: opts.dotFiles
+          dotfiles: opts.dotfiles
         }));
       }
 
@@ -76,7 +76,7 @@ class Resolver {
         debug('adding ignore patterns filter');
         this.addFilter(new IgnoreFilter({
           ignorePatterns: opts.ignorePatterns,
-          dotfiles: opts.dotFiles
+          dotfiles: opts.dotfiles
         }));
       }
     }
@@ -127,7 +127,7 @@ class Resolver {
     return globby(patterns, {
       cwd: this.options.cwd,
       ignore: this.exclude,
-      dot: this.options.dotFiles,
+      dot: this.options.dotfiles,
       nodir: this.options.noDir
     });
   }

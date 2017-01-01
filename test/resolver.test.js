@@ -80,9 +80,9 @@ test('Includes node_modules et al in glob if excludeDefault is false', async t =
   contains(t, files, 'bower_components/mod1/mod1.js', 'node_modules/mod1/mod1.js');
 });
 
-test('Includes dot-files when dotFiles is true', async t => {
+test('Includes dot-files when dotfiles is true', async t => {
   const files = await getFiles({
-    dotFiles: true
+    dotfiles: true
   });
   contains(t, files, '.dotfile1.js');
 });
