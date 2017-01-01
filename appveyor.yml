@@ -6,7 +6,7 @@ environment:
 
 cache:
  - node_modules
- - "%LOCALAPPDATA%\Yarn"
+ - "%LOCALAPPDATA%\\Yarn"
 
 install:
   - ps: Install-Product node $env:node_version
