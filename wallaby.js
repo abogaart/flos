@@ -6,7 +6,11 @@ module.exports = function (wallaby) {
     name: 'Flos',
     files: [
       'src/**/*.js',
-      'test/fixtures/**/{*,.*}'
+      'test/fixtures/index.js',
+      {
+        pattern: 'test/fixtures/**/{*,.*}',
+        instrument: false
+      }
     ],
 
     tests: [
@@ -23,7 +27,7 @@ module.exports = function (wallaby) {
 
     testFramework: 'ava',
 
-    debug: false,
+    debug: true,
 
     delays: {
       run: 1000
