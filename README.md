@@ -6,14 +6,15 @@
 [![Known Vulnerabilities](https://snyk.io/test/github/abogaart/flos/badge.svg)](https://snyk.io/test/github/abogaart/flos)
 [![codecov](https://codecov.io/gh/abogaart/flos/branch/master/graph/badge.svg)](https://codecov.io/gh/abogaart/flos)
 
-Flos is a general purpose lint framework. It's purpose is to simplify both configuration and reporting 
-when using multiple linters per project.
+Flos is a general purpose code lint tool. It is designed to centralize the process of code linting by handling the
+configuration, execution and reporting of all the linters in your project pipeline.
 
-## roadmap
-- cli
-- project config file
-- caching
-- ..
+## todo
+- [X] File resolving
+- [X] File ignoring
+- [ ] cli
+- [ ] project config file
+- [ ] caching
 
 ## plugins
 - [flos-webpack-plugin](https://github.com/abogaart/flos-webpack-plugin)
@@ -21,4 +22,4 @@ when using multiple linters per project.
 ## linters
 - ..
 
-Currently in pre-alpha state.   
+Currently in pre-alpha state.
