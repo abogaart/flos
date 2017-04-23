@@ -13,7 +13,7 @@ const absFile = pathUtil.toAbsolute(relFile, root);
 const relPathToFile = 'path/to/file.js';
 const absPathToFile = pathUtil.toAbsolute(relPathToFile, root);
 
-// basedir configuration
+// Basedir configuration
 test('process.cwd() is the default baseDir', t => {
   const filter = new Filter();
   t.is(filter.getBaseDir(), cwd);
@@ -30,7 +30,7 @@ test('resolves a basedir with a relative path to an abslute path, relative to pr
   t.is(relativePath.getBaseDir(), pathUtil.toAbsolute('testcwd', cwd));
 });
 
-// default behavior
+// Default behavior
 test('ignores files by default', t => {
   const filter = new Filter();
   t.false(filter.apply(relPathToFile));
@@ -49,7 +49,7 @@ test('throws exception when apply is called with an empty path', t => {
   t.throws(() => filter.apply(false), customError);
 });
 
-// filter calling
+// Filter calling
 test('calls filter with an absolute path, and a path relative to the baseDir', t => {
   const filter = new Filter({cwd: base});
   const spy = sinon.spy(filter, 'filter');
@@ -105,7 +105,7 @@ test('handles path outside of baseDir correctly', t => {
   spy.reset();
 });
 
-// file tracking
+// File tracking
 test('tracks filtered files by default', t => {
   const filter = new Filter({cwd: root});
   sinon.stub(filter, 'filter').returns(true);

@@ -1,4 +1,5 @@
 import test from 'ava';
+import stripAnsi from 'strip-ansi';
 import FlosLinter from '../src/linter';
 import FlosFormatter from '../src/formatter';
 
@@ -23,6 +24,11 @@ test('Formats warnings', t => {
 });
 
 test('Formats fatals', t => {
+  const assertFatals = (err = [], warn = [], msg) => {
+    const fatalMsg = stripAnsi(formatter.formatFatals(err, warn));
+    t.is(fatalMsg, msg);
+  };
+
   const err1 = new FlosLinter('e1');
   err1.errors = ['err1'];
   const err2 = new FlosLinter('e2');
@@ -37,35 +43,19 @@ test('Formats fatals', t => {
   const warn3 = new FlosLinter('w3');
   warn3.warnings = ['warn4'];
 
-  let fatalMsg = formatter.formatFatals([], []);
-  t.is(fatalMsg, 'Linting failed');
+  assertFatals([], [], 'Linting failed');
 
-  fatalMsg = formatter.formatFatals([err1], []);
-  t.is(fatalMsg, 'Linting failed: found 1 error in linter e1');
+  assertFatals([err1], [], 'Linting failed: found 1 error in linter e1');
+  assertFatals([err1, err2], [], 'Linting failed: found 3 errors in linters e1 and e2');
+  assertFatals([err1, err2, err3], [], 'Linting failed: found 4 errors in linters e1, e2 and e3');
 
-  fatalMsg = formatter.formatFatals([err1, err2], []);
-  t.is(fatalMsg, 'Linting failed: found 3 errors in linters e1 and e2');
+  assertFatals([], [warn1], 'Linting failed: found 1 warning in linter w1');
+  assertFatals([], [warn1, warn2], 'Linting failed: found 3 warnings in linters w1 and w2');
+  assertFatals([], [warn1, warn2, warn3], 'Linting failed: found 4 warnings in linters w1, w2 and w3');
 
-  fatalMsg = formatter.formatFatals([err1, err2, err3], []);
-  t.is(fatalMsg, 'Linting failed: found 4 errors in linters e1, e2 and e3');
-
-  fatalMsg = formatter.formatFatals([], [warn1]);
-  t.is(fatalMsg, 'Linting failed: found 1 warning in linter w1');
-
-  fatalMsg = formatter.formatFatals([], [warn1, warn2]);
-  t.is(fatalMsg, 'Linting failed: found 3 warnings in linters w1 and w2');
-
-  fatalMsg = formatter.formatFatals([], [warn1, warn2, warn3]);
-  t.is(fatalMsg, 'Linting failed: found 4 warnings in linters w1, w2 and w3');
-
-  fatalMsg = formatter.formatFatals([err1], [warn1]);
-  t.is(fatalMsg, 'Linting failed: found 1 error in linter e1, and 1 warning in linter w1');
-
-  fatalMsg = formatter.formatFatals([err1, err2], [warn1, warn2]);
-  t.is(fatalMsg, 'Linting failed: found 3 errors in linters e1 and e2, and 3 warnings in linters w1 and w2');
-
-  fatalMsg = formatter.formatFatals([err1, err2, err3], [warn1, warn2, warn3]);
-  t.is(fatalMsg, 'Linting failed: found 4 errors in linters e1, e2 and e3, ' +
+  assertFatals([err1], [warn1], 'Linting failed: found 1 error in linter e1, and 1 warning in linter w1');
+  assertFatals([err1, err2], [warn1, warn2], 'Linting failed: found 3 errors in linters e1 and e2, and 3 warnings in linters w1 and w2');
+  assertFatals([err1, err2, err3], [warn1, warn2, warn3], 'Linting failed: found 4 errors in linters e1, e2 and e3, ' +
     'and 4 warnings in linters w1, w2 and w3');
 });
 
@@ -77,7 +67,7 @@ test('Formats exception', t => {
 
   const error1 = 'error1';
   const error2 = {stack: 'error2'};
-  t.is(formatter.formatException(error1), 'error1');
-  t.is(formatter.formatException(error2), 'error2');
+  t.is(stripAnsi(formatter.formatException(error1)), 'error1');
+  t.is(stripAnsi(formatter.formatException(error2)), 'error2');
 });
 

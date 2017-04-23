@@ -14,15 +14,15 @@ function setup(link, fixture) {
   if (test('-e', dir)) {
     rm('-rf', dir);
   }
-  // create tmp fixture folder
+  // Create tmp fixture folder
   mkdir('-p', dir);
-  // copy fixture contents to tmp folder
+  // Copy fixture contents to tmp folder
   cp('-r', src, fixtures);
   if (!test('-e', links)) {
-    // create 'links' folder if not exists
+    // Create 'links' folder if not exists
     mkdir('-p', links);
   }
-  // in 'links' folder, create a symlink to the tmp fixture folder
+  // In 'links' folder, create a symlink to the tmp fixture folder
   ln('-sf', dir, link);
 
   return link;

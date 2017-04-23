@@ -42,7 +42,7 @@ function equals(t, value, ...expected) {
   t.is(value.length, expected.length);
 }
 
-// include
+// Include
 test('Returns zero files if no config is set', async t => {
   const files = await new Resolver().getFiles();
   t.deepEqual(files, []);
@@ -94,7 +94,7 @@ test('Includes dot-files when pattern is dot-pattern', async t => {
   contains(t, files, '.dotfile1.js');
 });
 
-// default excludes and ignores
+// Default excludes and ignores
 test('Excludes node_modules et al by default', async t => {
   const files = await getFiles();
   notContains(t, files, 'bower_components/mod1/mod1.js', 'node_modules/mod1/mod1.js');
@@ -112,7 +112,7 @@ test('Excludes dot-files by default', async t => {
   notContains(t, files, '.dotfile1.js');
 });
 
-// exclude
+// Exclude
 test('Excludes patterns from glob', async t => {
   const files = await resolver({
     exclude: ['src/**']
@@ -121,7 +121,7 @@ test('Excludes patterns from glob', async t => {
   equals(t, files, 'file1.js');
 });
 
-// ignore
+// Ignore
 test('Ignore pattern can be specified', async t => {
   const files = await getFiles({
     ignorePatterns: ['folder1/']
@@ -144,7 +144,7 @@ test('Ignore can be disabled', async t => {
   contains(t, files, 'file1.js');
 });
 
-// filters
+// Filters
 test('Executes custom filters', async t => {
   const filter = new Filter();
   const stub = sinon.stub(filter, 'apply').returns(true);

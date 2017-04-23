@@ -8,10 +8,10 @@ if (process.argv.indexOf('--debug') > -1) {
 
 const flos = require('../lib/api');
 
-// load config
+// Load config
 const config = {};
 
-// load linters
+// Load linters
 const linters = [];
 
 flos.run(linters, config);

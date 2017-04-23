@@ -32,7 +32,7 @@ class FlosLinter {
     this.errors = [];
     this.warnings = [];
 
-    // allow for a friendly pattern configuration
+    // Allow for a friendly pattern configuration
     this.options.include = asArray(this.options.include);
     this.options.exclude = asArray(this.options.exclude);
   }

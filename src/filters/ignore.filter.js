@@ -40,7 +40,7 @@ class IgnoreFilter extends Filter {
   }
 
   /**
-   * add pattern to node-ignore instance
+   * Add pattern to node-ignore instance
    * @param {string} pattern, pattern do add to node-ignore
    * @returns {array} raw ignore rules
    */

@@ -8,7 +8,7 @@ import FlosReporter from './reporter';
 class FlosRunner {
 
   constructor(...linters) {
-    if (linters.length === 1 && linters[0] instanceof Array) {
+    if (linters.length === 1 && Array.isArray(linters[0])) {
       this.linters = linters[0];
     } else {
       this.linters = linters;

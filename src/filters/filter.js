@@ -17,7 +17,7 @@ class Filter {
    */
   constructor(options) {
     this.options = Object.assign({}, DEFAULT_OPTIONS, options);
-    this.filtered = {}; // track filtered files
+    this.filtered = {}; // Track filtered files
 
     this.setBaseDir(this.options.cwd);
   }
