@@ -1,6 +1,8 @@
 import FlosProcessor from './processor';
 import FlosReporter from './reporter';
 
+const debug = require('debug')('flos:runner');
+
 /**
  * Main entry point for starting a flos run. It runs all the linters and processes the results
  * with a FlosProcessor. The results are reported to the user with a FlosReporter.
@@ -8,6 +10,7 @@ import FlosReporter from './reporter';
 class FlosRunner {
 
   constructor(...linters) {
+    // Allow argument to be native array
     if (linters.length === 1 && Array.isArray(linters[0])) {
       this.linters = linters[0];
     } else {
@@ -20,6 +23,7 @@ class FlosRunner {
   }
 
   run(processor = new FlosProcessor(), reporter = new FlosReporter()) {
+    debug('run', processor, reporter);
     return Promise
       .all(this._lintPromises())
       .then(linters => processor.process(linters, reporter))

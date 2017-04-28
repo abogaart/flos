@@ -60,7 +60,9 @@ const loadCwdConfig = () => {
 };
 
 const start = config => {
-  const linters = [];
+  debug('start with config\n%O', config);
+  const linters = config.linters;
+  delete config.linters;
   flos.run(linters, config);
 
   if (cli.flags.fire) {
@@ -70,6 +72,7 @@ const start = config => {
 
 Promise.all([loadHomeConfig(), loadCwdConfig()])
 .then(configs => {
+  debug('found configs %o', configs);
   configs = configs.map(config => {
     if (config) {
       if (typeof config.config === 'object') {
@@ -80,12 +83,9 @@ Promise.all([loadHomeConfig(), loadCwdConfig()])
     return null;
   });
 
-  debug('Configurations:', configs);
-
   // merge config
   const config = defaultConfig;
   merge(config, ...configs, pick(cli.flags, 'fire'));
-  debug('Merged configuration:', config);
   start(config);
 })
 .catch(err => {

@@ -1,5 +1,7 @@
 import FlosFormatter from './formatter';
 
+const debug = require('debug')('flos:reporter');
+
 class FlosReporter {
 
   constructor(formatter = new FlosFormatter()) {
@@ -40,6 +42,7 @@ class FlosReporter {
   }
 
   finish() {
+    debug('finish ', this.errors, this.warnings);
     this.errors.forEach(error => this.print(this.formatter.formatError(error)));
     this.warnings.forEach(warning => this.print(this.formatter.formatWarning(warning)));
     this.print('Flos finished');

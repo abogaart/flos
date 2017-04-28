@@ -1,9 +1,12 @@
 
 import FlosReporter from './reporter';
 
+const debug = require('debug')('flos:processor');
+
 class FlosProcessor {
 
   process(linters, reporter = new FlosReporter()) {
+    debug('process', linters.map(linter => linter.name));
     const errors = linters.filter(linter => linter.hasErrors());
     const warnings = linters.filter(linter => linter.hasWarnings());
 

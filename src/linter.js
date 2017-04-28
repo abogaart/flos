@@ -35,6 +35,8 @@ class FlosLinter {
     // Allow for a friendly pattern configuration
     this.options.include = asArray(this.options.include);
     this.options.exclude = asArray(this.options.exclude);
+
+    debug('new linter', this.name, this.options);
   }
 
   /**
@@ -63,9 +65,15 @@ class FlosLinter {
 
     debug('Starting lint');
     return this.resolver.getFiles().then(files => {
-      debug('Files to lint', files);
+      // debug('Files to lint', files);
+      const report = this.flos(files);
+
       return this;
     });
+  }
+
+  flos(files) {
+    debug('Flos %s files', files.length);
   }
 
   /**

@@ -31,8 +31,8 @@ const DEFAULT_OPTS = {
 
 /**
  * The resolver provides an interface for generating a list of files according to specified
- * glob patterns and path filters. It excludes folders like 'node_modules' form globbing and
- * by applying a default ignore filter and ensures correct handling of dotfiles.
+ * glob patterns and path filters. It excludes folders like 'node_modules' by default
+ * and ensures correct handling of dotfiles.
  */
 class Resolver {
 
