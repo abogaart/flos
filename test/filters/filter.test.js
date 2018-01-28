@@ -57,12 +57,12 @@ test('calls filter with an absolute path, and a path relative to the baseDir', t
   filter.apply('file.js');
   t.true(spy.calledOnce);
   t.true(spy.calledWithExactly(pathUtil.toAbsolute('file.js', base), 'file.js'));
-  spy.reset();
+  spy.resetHistory();
 
   filter.apply('path/to/file.js');
   t.true(spy.calledOnce);
   t.true(spy.calledWithExactly(pathUtil.toAbsolute(relPathToFile, base), relPathToFile));
-  spy.reset();
+  spy.resetHistory();
 
   filter.apply('/root/base/path/to/file.js');
   t.true(spy.calledOnce);
@@ -75,19 +75,19 @@ test('handles baseDir == root correctly', t => {
 
   filter.apply('file.js');
   t.true(spy.calledWithExactly(absFile, relFile));
-  spy.reset();
+  spy.resetHistory();
 
   filter.apply('/file.js');
   t.true(spy.calledWithExactly(absFile, relFile));
-  spy.reset();
+  spy.resetHistory();
 
   filter.apply('path/to/file.js');
   t.true(spy.calledWithExactly(absPathToFile, relPathToFile));
-  spy.reset();
+  spy.resetHistory();
 
   filter.apply('/path/to/file.js');
   t.true(spy.calledWithExactly(absPathToFile, relPathToFile));
-  spy.reset();
+  spy.resetHistory();
 });
 
 test('handles path outside of baseDir correctly', t => {
@@ -97,12 +97,12 @@ test('handles path outside of baseDir correctly', t => {
   filter.apply('/file.js');
   t.true(spy.calledOnce);
   t.true(spy.calledWithExactly(absFile, '../../file.js'));
-  spy.reset();
+  spy.resetHistory();
 
   filter.apply('/path/to/file.js');
   t.true(spy.calledOnce);
   t.true(spy.calledWithExactly(absPathToFile, '../../path/to/file.js'));
-  spy.reset();
+  spy.resetHistory();
 });
 
 // File tracking

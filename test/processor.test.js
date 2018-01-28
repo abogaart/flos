@@ -45,7 +45,7 @@ test('Detects fatal linters', t => {
   t.true(reporter.fatal.calledOnce);
   t.true(reporter.fatal.calledWith([linterA], []));
 
-  reporter.fatal.reset();
+  reporter.fatal.resetHistory();
   const linterB = new FlosLinter('b', {failEarly: true, failOnWarning: true});
   linterB.warnings = ['warning1'];
   processor.process([linterB], reporter);
