@@ -65,9 +65,9 @@ class FlosLinter {
 
     debug('Starting lint');
     return this.resolver.getFiles().then(files => {
-      // debug('Files to lint', files);
+      debug('Files to lint', files);
       const report = this.flos(files);
-
+      debug('generated report', report);
       return this;
     });
   }
